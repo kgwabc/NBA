@@ -1,4 +1,5 @@
 import Database from "better-sqlite3";
+import fs from "fs";
 import path from "path";
 
 declare global {
@@ -7,8 +8,13 @@ declare global {
 }
 
 function createConnection() {
-  const dbPath = path.join(process.cwd(), "data", "app.db");
+  const dataDir = path.join(process.cwd(), "data");
+  fs.mkdirSync(dataDir, { recursive: true });
+  const dbPath = path.join(dataDir, "app.db");
   const db = new Database(dbPath);
+  // Next.js build spawns several worker processes that open this file concurrently;
+  // wait for the lock instead of throwing SQLITE_BUSY when the file doesn't exist yet.
+  db.pragma("busy_timeout = 5000");
   db.pragma("journal_mode = WAL");
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
