@@ -14,6 +14,11 @@ type ChatEvent =
   | { type: "delete"; id: number }
   | { type: "clear" };
 
+function formatTime(createdAt: string) {
+  const date = new Date(createdAt.replace(" ", "T") + "Z");
+  return date.toLocaleTimeString("ko-KR", { hour: "numeric", minute: "2-digit" });
+}
+
 export default function ChatRoom({
   onClose,
   username,
@@ -166,6 +171,9 @@ export default function ChatRoom({
                       >
                         {message.content}
                       </p>
+                      <span className="self-end text-[10px] text-zinc-400 dark:text-zinc-500">
+                        {formatTime(message.created_at)}
+                      </span>
                     </div>
                   </div>
                 );
