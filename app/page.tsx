@@ -15,10 +15,12 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black">
-      <header className="flex w-full items-center justify-between px-6 py-4">
-        <h1 className="text-xl font-semibold text-black dark:text-zinc-50">🏀 NBA 팀 소개</h1>
+      <header className="flex w-full flex-wrap items-center justify-between gap-y-2 px-4 py-3 sm:px-6 sm:py-4">
+        <h1 className="text-lg font-semibold text-black dark:text-zinc-50 sm:text-xl">
+          🏀 NBA 팀 소개
+        </h1>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <ChatButton
             isLoggedIn={!!session}
             username={session?.username}
@@ -27,20 +29,20 @@ export default async function Home() {
           {userIsAdmin && <AdminButton />}
 
           {session ? (
-            <div className="flex items-center gap-3">
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                 <span className="font-medium text-black dark:text-zinc-50">{session.username}</span>님
               </p>
               <LogoutButton />
             </div>
           ) : (
-            <div className="flex items-center gap-3 text-sm font-medium">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-medium sm:gap-3 sm:text-sm">
               <Link href="/login" className="text-black dark:text-zinc-50">
                 로그인
               </Link>
               <Link
                 href="/signup"
-                className="rounded-full bg-foreground px-4 py-2 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc]"
+                className="rounded-full bg-foreground px-3 py-1.5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] sm:px-4 sm:py-2"
               >
                 회원가입
               </Link>
