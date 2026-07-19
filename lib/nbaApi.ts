@@ -32,7 +32,15 @@ type BalldontliePlayersResponse = {
   meta: { next_cursor: number | null };
 };
 
-const MAX_PLAYER_PAGES = 10;
+const MAX_PLAYER_PAGES = 2;
+
+export class NbaApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
 
 export type NbaPlayer = {
   id: number;
@@ -51,7 +59,7 @@ async function getBalldontlieTeamId(abbreviation: string): Promise<number> {
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch teams: ${res.status}`);
+    throw new NbaApiError(`Failed to fetch teams: ${res.status}`, res.status);
   }
 
   const { data } = (await res.json()) as BalldontlieTeamsResponse;
@@ -104,11 +112,11 @@ export async function getPlayersByAbbreviation(abbreviation: string): Promise<Nb
 
     const res = await fetch(url, {
       headers: getAuthHeaders(),
-      next: { revalidate: 3600 },
+      next: { revalidate: 86400 },
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch players: ${res.status}`);
+      throw new NbaApiError(`Failed to fetch players: ${res.status}`, res.status);
     }
 
     const { data, meta } = (await res.json()) as BalldontliePlayersResponse;
