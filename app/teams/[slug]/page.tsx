@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTeamBySlug, nbaTeams } from "@/lib/nbaTeams";
+import { getFamousPlayers } from "@/lib/famousPlayers";
 import PlayerRoster from "@/app/components/PlayerRoster";
 
 export function generateStaticParams() {
@@ -18,6 +19,8 @@ export default async function TeamDetailPage({
   if (!team) {
     notFound();
   }
+
+  const famousPlayers = getFamousPlayers(team.slug);
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black">
@@ -67,6 +70,25 @@ export default async function TeamDetailPage({
           <h2 className="text-lg font-semibold text-black dark:text-zinc-50">팀 소개</h2>
           <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{team.description}</p>
         </div>
+
+        {famousPlayers.length > 0 && (
+          <div className="flex max-w-2xl flex-col gap-3">
+            <h2 className="text-lg font-semibold text-black dark:text-zinc-50">레전드 선수</h2>
+            <div className="flex flex-col gap-3">
+              {famousPlayers.map((player) => (
+                <div
+                  key={player.name}
+                  className="flex flex-col gap-1 rounded-lg border border-black/[.08] p-4 dark:border-white/[.145]"
+                >
+                  <p className="text-sm font-medium text-black dark:text-zinc-50">{player.name}</p>
+                  <p className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+                    {player.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col gap-3">
           <h2 className="text-lg font-semibold text-black dark:text-zinc-50">선수단</h2>
