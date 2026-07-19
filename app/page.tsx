@@ -17,7 +17,7 @@ export default async function Home() {
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black">
       <header className="flex w-full flex-wrap items-center justify-between gap-y-2 px-4 py-3 sm:px-6 sm:py-4">
         <h1 className="text-lg font-semibold text-black dark:text-zinc-50 sm:text-xl">
-          🏀 NBA 팀 소개
+          🏀 NBA NIGHT NIGHT
         </h1>
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">

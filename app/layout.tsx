@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NBA 팀 소개",
+  title: "NBA NIGHT NIGHT",
   description: "NBA 30개 팀을 소개하는 웹사이트",
 };
 
