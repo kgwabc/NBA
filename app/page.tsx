@@ -21,6 +21,12 @@ export default async function Home() {
         </h1>
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <Link
+            href="/history"
+            className="rounded-full bg-orange-600 px-3 py-1.5 text-xs font-bold tracking-wide text-white shadow-sm transition-colors hover:bg-orange-500 sm:px-4 sm:py-2 sm:text-sm"
+          >
+            NBA HISTORY
+          </Link>
           <ChatButton
             isLoggedIn={!!session}
             username={session?.username}
