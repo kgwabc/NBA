@@ -65,6 +65,27 @@ export default function ChatRoom({
     listEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // On mobile, the on-screen keyboard can cover the input/latest messages
+  // without the browser repositioning this fixed-position panel, so force a
+  // re-scroll once the keyboard has finished animating open.
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    function handleResize() {
+      listEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    viewport.addEventListener("resize", handleResize);
+    return () => viewport.removeEventListener("resize", handleResize);
+  }, []);
+
+  function handleInputFocus() {
+    setTimeout(() => {
+      listEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 300);
+  }
+
   async function handleSend(event: React.FormEvent) {
     event.preventDefault();
     const content = input.trim();
@@ -108,8 +129,8 @@ export default function ChatRoom({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="flex h-[32rem] w-full max-w-md flex-col rounded-lg bg-white shadow-xl dark:bg-zinc-900">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 px-4 sm:items-center">
+      <div className="flex h-[85dvh] w-full max-w-md flex-col rounded-t-lg bg-white shadow-xl sm:h-[32rem] sm:rounded-lg dark:bg-zinc-900">
         <div className="flex items-center justify-between border-b border-black/[.08] px-4 py-3 dark:border-white/[.145]">
           <h2 className="text-sm font-semibold text-black dark:text-zinc-50">실시간 채팅</h2>
           <div className="flex items-center gap-3">
@@ -191,6 +212,7 @@ export default function ChatRoom({
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onFocus={handleInputFocus}
             placeholder="메시지를 입력하세요"
             maxLength={500}
             className="h-10 flex-1 rounded-full border border-black/[.08] bg-white px-4 text-sm text-black outline-none focus:border-black/40 dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
