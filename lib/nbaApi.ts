@@ -50,43 +50,7 @@ export type NbaPlayer = {
   jerseyNumber: string | null;
   height: string | null;
   weight: string | null;
-  photoUrl: string | null;
 };
-
-type EspnSearchResult = {
-  sport?: string;
-  description?: string;
-  image?: { default?: string };
-};
-
-type EspnSearchResponse = {
-  results?: { type: string; contents: EspnSearchResult[] }[];
-};
-
-// balldontlie doesn't return player photos, and its player ids don't map to
-// stats.nba.com person ids used by cdn.nba.com headshots. ESPN's (unofficial,
-// undocumented) player search returns a headshot URL directly per name match,
-// so we look photos up by name instead. Best-effort: returns null on any
-// failure or no confident NBA match rather than throwing.
-async function getEspnHeadshotUrl(fullName: string): Promise<string | null> {
-  try {
-    const url = new URL("https://site.web.api.espn.com/apis/search/v2");
-    url.searchParams.set("query", fullName);
-    url.searchParams.set("type", "player");
-
-    const res = await fetch(url, { next: { revalidate: 86400 } });
-    if (!res.ok) return null;
-
-    const { results } = (await res.json()) as EspnSearchResponse;
-    const players = results?.find((r) => r.type === "player")?.contents ?? [];
-    const match = players.find(
-      (p) => p.sport === "basketball" && p.description?.toUpperCase().includes("NBA"),
-    );
-    return match?.image?.default ?? null;
-  } catch {
-    return null;
-  }
-}
 
 async function getBalldontlieTeamId(abbreviation: string): Promise<number> {
   const res = await fetch(`${BALLDONTLIE_BASE_URL}/teams`, {
@@ -115,15 +79,7 @@ function mapPlayer(player: BalldontliePlayer): NbaPlayer {
     jerseyNumber: player.jersey_number,
     height: player.height,
     weight: player.weight,
-    photoUrl: null,
   };
-}
-
-async function attachPhotos(players: NbaPlayer[]): Promise<NbaPlayer[]> {
-  const photoUrls = await Promise.all(
-    players.map((p) => getEspnHeadshotUrl(`${p.firstName} ${p.lastName}`)),
-  );
-  return players.map((p, i) => ({ ...p, photoUrl: photoUrls[i] }));
 }
 
 function sortByJerseyNumber(players: NbaPlayer[]): NbaPlayer[] {
@@ -172,5 +128,5 @@ export async function getPlayersByAbbreviation(abbreviation: string): Promise<Nb
     cursor = meta.next_cursor;
   }
 
-  return attachPhotos(sortByJerseyNumber(players));
+  return sortByJerseyNumber(players);
 }

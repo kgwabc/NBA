@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Player = {
@@ -11,7 +10,6 @@ type Player = {
   jerseyNumber: string | null;
   height: string | null;
   weight: string | null;
-  photoUrl: string | null;
 };
 
 type PlayersResponse = {
@@ -22,16 +20,6 @@ type PlayersResponse = {
 function PlayerCard({ player }: { player: Player }) {
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-black/[.08] p-3 dark:border-white/[.145]">
-      {player.photoUrl ? (
-        <Image
-          src={player.photoUrl}
-          alt={`${player.firstName} ${player.lastName}`}
-          width={56}
-          height={56}
-          className="mb-1 h-14 w-14 rounded-full object-cover"
-          unoptimized
-        />
-      ) : null}
       <p className="text-sm font-medium text-black dark:text-zinc-50">
         {player.jerseyNumber ? (
           <span className="mr-1.5 inline-block rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
