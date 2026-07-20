@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, User } from "@/lib/db";
+import { dbGet, dbRun, User } from "@/lib/db";
 import { createSessionToken, hashPassword, SESSION_COOKIE, SESSION_DURATION_SECONDS } from "@/lib/auth";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{4,20}$/;
@@ -19,15 +19,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "비밀번호는 8자 이상이어야 합니다." }, { status: 400 });
   }
 
-  const existing = db.prepare("SELECT id FROM users WHERE username = ?").get(username);
+  const existing = await dbGet("SELECT id FROM users WHERE username = ?", [username]);
   if (existing) {
     return NextResponse.json({ error: "이미 사용 중인 아이디입니다." }, { status: 409 });
   }
 
   const passwordHash = await hashPassword(password);
-  const result = db
-    .prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)")
-    .run(username, passwordHash);
+  const result = await dbRun("INSERT INTO users (username, password_hash) VALUES (?, ?)", [
+    username,
+    passwordHash,
+  ]);
 
   const user: Pick<User, "id" | "username"> = { id: Number(result.lastInsertRowid), username };
   const token = await createSessionToken({ userId: user.id, username: user.username });

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySessionToken, isAdmin, ADMIN_USERNAME } from "@/lib/auth";
-import { db, User } from "@/lib/db";
+import { dbAll, dbGet, dbRun, User } from "@/lib/db";
 
 async function requireAdmin(request: NextRequest) {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
   const auth = await requireAdmin(request);
   if (auth.error) return auth.error;
 
-  const users = db
-    .prepare("SELECT id, username, created_at FROM users ORDER BY id")
-    .all() as Pick<User, "id" | "username" | "created_at">[];
+  const users = await dbAll<Pick<User, "id" | "username" | "created_at">>(
+    "SELECT id, username, created_at FROM users ORDER BY id",
+  );
 
   return NextResponse.json({ users });
 }
@@ -35,15 +35,16 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "id가 필요합니다." }, { status: 400 });
   }
 
-  const target = db.prepare("SELECT username FROM users WHERE id = ?").get(id) as
-    | Pick<User, "username">
-    | undefined;
+  const target = await dbGet<Pick<User, "username">>(
+    "SELECT username FROM users WHERE id = ?",
+    [id],
+  );
 
   if (target && target.username === ADMIN_USERNAME) {
     return NextResponse.json({ error: "관리자 계정은 삭제할 수 없습니다." }, { status: 400 });
   }
 
-  db.prepare("DELETE FROM users WHERE id = ?").run(id);
+  await dbRun("DELETE FROM users WHERE id = ?", [id]);
 
   return NextResponse.json({ success: true });
 }

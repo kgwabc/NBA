@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, User } from "@/lib/db";
+import { dbGet, User } from "@/lib/db";
 import { createSessionToken, verifyPassword, SESSION_COOKIE, SESSION_DURATION_SECONDS } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     return invalidCredentials();
   }
 
-  const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username) as User | undefined;
+  const user = await dbGet<User>("SELECT * FROM users WHERE username = ?", [username]);
   if (!user) {
     return invalidCredentials();
   }

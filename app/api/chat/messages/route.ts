@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySessionToken, isAdmin } from "@/lib/auth";
-import { db, ChatMessage } from "@/lib/db";
+import { dbAll, dbGet, dbRun, ChatMessage } from "@/lib/db";
 import { publish } from "@/lib/chatBroadcast";
 
 const MAX_CONTENT_LENGTH = 500;
@@ -17,11 +17,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
   }
 
-  const messages = db
-    .prepare(
-      "SELECT id, username, content, created_at FROM messages ORDER BY id DESC LIMIT ?",
-    )
-    .all(HISTORY_LIMIT) as ChatMessage[];
+  const messages = await dbAll<ChatMessage>(
+    "SELECT id, username, content, created_at FROM messages ORDER BY id DESC LIMIT ?",
+    [HISTORY_LIMIT],
+  );
 
   return NextResponse.json({ messages: messages.reverse() });
 }
@@ -42,13 +41,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const result = db
-    .prepare("INSERT INTO messages (username, content) VALUES (?, ?)")
-    .run(session.username, content);
+  const result = await dbRun("INSERT INTO messages (username, content) VALUES (?, ?)", [
+    session.username,
+    content,
+  ]);
 
-  const message = db
-    .prepare("SELECT id, username, content, created_at FROM messages WHERE id = ?")
-    .get(result.lastInsertRowid) as ChatMessage;
+  const message = (await dbGet<ChatMessage>(
+    "SELECT id, username, content, created_at FROM messages WHERE id = ?",
+    [result.lastInsertRowid],
+  )) as ChatMessage;
 
   publish({ type: "message", message });
 
@@ -67,7 +68,7 @@ export async function DELETE(request: NextRequest) {
   const body = await request.json().catch(() => null);
 
   if (body?.all === true) {
-    db.prepare("DELETE FROM messages").run();
+    await dbRun("DELETE FROM messages");
     publish({ type: "clear" });
     return NextResponse.json({ success: true });
   }
@@ -77,7 +78,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "id가 필요합니다." }, { status: 400 });
   }
 
-  db.prepare("DELETE FROM messages WHERE id = ?").run(id);
+  await dbRun("DELETE FROM messages WHERE id = ?", [id]);
   publish({ type: "delete", id });
 
   return NextResponse.json({ success: true });
