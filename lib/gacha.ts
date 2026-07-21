@@ -9,7 +9,7 @@ export const PACK_TYPES: Record<PackType, { cost: number; dropRates: Record<Card
   legend: { cost: 800, dropRates: { BRONZE: 0.05, SILVER: 0.25, GOLD: 0.5, LEGEND: 0.2 } },
 };
 
-const FREE_PACK_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+const FREE_PACK_COOLDOWN_MS = 10 * 1000;
 
 function rollRarity(dropRates: Record<CardRarity, number>): CardRarity {
   const roll = Math.random();

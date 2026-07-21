@@ -27,6 +27,12 @@ export default async function Home() {
           >
             NBA HISTORY
           </Link>
+          <Link
+            href="/game"
+            className="rounded-full bg-purple-600 px-3 py-1.5 text-xs font-bold tracking-wide text-white shadow-sm transition-colors hover:bg-purple-500 sm:px-4 sm:py-2 sm:text-sm"
+          >
+            🎴 카드 게임
+          </Link>
           <ChatButton
             isLoggedIn={!!session}
             username={session?.username}
