@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
+import type { NextRequest } from "next/server";
 
 const SESSION_COOKIE = "session";
 const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -49,6 +50,11 @@ const ADMIN_USERNAME = "kgwabc";
 
 function isAdmin(username: string): boolean {
   return username === ADMIN_USERNAME;
+}
+
+export async function requireSession(request: NextRequest): Promise<SessionPayload | null> {
+  const token = request.cookies.get(SESSION_COOKIE)?.value;
+  return token ? verifySessionToken(token) : null;
 }
 
 export { SESSION_COOKIE, SESSION_DURATION_SECONDS, ADMIN_USERNAME, isAdmin };

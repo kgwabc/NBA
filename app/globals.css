@@ -24,3 +24,111 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ---- 카드 가챠 게임 연출 ---- */
+
+.card-flip-container {
+  perspective: 1000px;
+}
+.card-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-out;
+}
+.card-flip-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+.card-face-back {
+  transform: rotateY(180deg);
+}
+
+.card-rarity-bronze {
+  border: 2px solid #a97142;
+  box-shadow: 0 0 6px rgba(169, 113, 66, 0.4);
+}
+.card-rarity-silver {
+  border: 2px solid #c0c0c0;
+  box-shadow: 0 0 8px rgba(192, 192, 192, 0.5);
+}
+.card-rarity-gold {
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+.card-rarity-legend {
+  border: 2px solid #ff6a00;
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+  animation: legend-flame 1.2s ease-in-out infinite alternate;
+}
+@keyframes legend-flame {
+  from {
+    box-shadow: 0 0 20px rgba(255, 106, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(255, 106, 0, 1), 0 0 60px rgba(255, 215, 0, 0.7);
+  }
+}
+
+@keyframes card-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  20% {
+    transform: translateX(-4px) rotate(-2deg);
+  }
+  40% {
+    transform: translateX(4px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(-3px) rotate(-1deg);
+  }
+  80% {
+    transform: translateX(3px) rotate(1deg);
+  }
+}
+.card-shake-gold {
+  animation: card-shake 0.4s ease-in-out 2;
+}
+.card-shake-legend {
+  animation: card-shake 0.5s ease-in-out 3;
+}
+
+.gauge-bar-track {
+  position: relative;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.gauge-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease-out, background-color 0.4s ease-out;
+}
+.gauge-bar-fill.over-cap {
+  background-color: #dc2626;
+}
+.gauge-bar-fill.under-cap {
+  background-color: #16a34a;
+}
+
+@keyframes event-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.battle-event-line {
+  animation: event-slide-in 0.3s ease-out;
+}
