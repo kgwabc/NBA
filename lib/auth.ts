@@ -57,4 +57,19 @@ export async function requireSession(request: NextRequest): Promise<SessionPaylo
   return token ? verifySessionToken(token) : null;
 }
 
+export type AdminAuthResult =
+  | { session: SessionPayload; error?: undefined }
+  | { session?: undefined; error: { message: string; status: 401 | 403 } };
+
+export async function requireAdmin(request: NextRequest): Promise<AdminAuthResult> {
+  const session = await requireSession(request);
+  if (!session) {
+    return { error: { message: "로그인이 필요합니다.", status: 401 } };
+  }
+  if (!isAdmin(session.username)) {
+    return { error: { message: "권한이 없습니다.", status: 403 } };
+  }
+  return { session };
+}
+
 export { SESSION_COOKIE, SESSION_DURATION_SECONDS, ADMIN_USERNAME, isAdmin };

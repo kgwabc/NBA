@@ -4,6 +4,7 @@ import { SESSION_COOKIE, verifySessionToken, isAdmin } from "@/lib/auth";
 import LogoutButton from "@/app/components/LogoutButton";
 import ChatButton from "@/app/components/ChatButton";
 import AdminButton from "@/app/components/AdminButton";
+import AdminGameButton from "@/app/components/AdminGameButton";
 import TeamGrid from "@/app/components/TeamGrid";
 import { nbaTeams } from "@/lib/nbaTeams";
 
@@ -39,6 +40,7 @@ export default async function Home() {
             isAdmin={userIsAdmin}
           />
           {userIsAdmin && <AdminButton />}
+          {userIsAdmin && <AdminGameButton />}
 
           {session ? (
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">

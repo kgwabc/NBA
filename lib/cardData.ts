@@ -22,7 +22,7 @@ export const cardSeeds: CardSeed[] = [
     off: 98,
     def: 90,
     salary: 45,
-    synergyTags: ["SPLASH_BROTHERS", "WARRIORS"],
+    synergyTags: ["WARRIORS"],
     flavorText: "역대급 3점슛 능력으로 '스몰볼' 시대를 연 워리어스의 에이스.",
   },
   {
@@ -57,7 +57,7 @@ export const cardSeeds: CardSeed[] = [
     off: 88,
     def: 78,
     salary: 30,
-    synergyTags: ["SPLASH_BROTHERS", "WARRIORS"],
+    synergyTags: ["WARRIORS"],
     flavorText: "커리와 함께 '스플래시 브라더스'를 이룬 정교한 슈터.",
   },
   {

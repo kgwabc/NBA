@@ -184,7 +184,7 @@ export type UserCard = {
   id: number;
   user_id: number;
   card_id: number;
-  acquired_via: "pack" | "fusion";
+  acquired_via: "pack" | "fusion" | "admin";
   created_at: string;
 };
 
