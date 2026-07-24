@@ -9,7 +9,7 @@ type ClassicGame = {
   title: string;
   matchup: string;
   boxScore: string;
-  youtubeUrl: string;
+  youtubeUrl?: string;
 };
 
 type Era = {
@@ -29,7 +29,6 @@ const eras: Era[] = [
         title: "윌트 체임벌린, 100득점",
         matchup: "필라델피아 워리어스 169 : 147 뉴욕 닉스",
         boxScore: "체임벌린 100득점(FG 36/63, FT 28/32) 25리바운드. NBA 역사상 한 경기 최다 득점 기록으로, 지금까지도 깨지지 않고 있습니다. 당시 경기 영상은 대부분 소실되어 라디오 중계와 일부 사진만 남아있습니다.",
-        youtubeUrl: "https://www.youtube.com/watch?v=CfqRx8cA7b4",
       },
       {
         id: "willis-reed",
@@ -98,22 +97,6 @@ const eras: Era[] = [
     label: "2010년대",
     games: [
       {
-        id: "curry-12-threes",
-        date: "2016.02.27",
-        title: "커리, OKC전 3점슛 12개",
-        matchup: "골든스테이트 워리어스 121 : 118 (OT) 오클라호마시티 썬더",
-        boxScore: "스테픈 커리 46득점(3P 12/16), 한 경기 최다 3점슛 타이 기록. 연장 종료 0.6초 전 하프코트 부근에서 던진 3점슛이 그대로 꽂히며 결승골이 됐습니다.",
-        youtubeUrl: "https://www.youtube.com/watch?v=lgrKkNzRkGw",
-      },
-      {
-        id: "lillard-bad-shot",
-        date: "2019.04.23",
-        title: "데미안 릴라드의 '배드 샷' (1라운드 5차전)",
-        matchup: "포틀랜드 트레일블레이저스 118 : 115 오클라호마시티 썬더",
-        boxScore: "데미안 릴라드 50득점. 종료 직전 폴 조지를 앞에 두고 던진 37피트 3점슛이 그대로 들어가며 시리즈를 4승 1패로 마무리. 경기 후 조지가 \"나쁜 슛이었다\"고 평했고 릴라드도 이를 인정하면서 '배드 샷'이라는 별명이 붙었습니다.",
-        youtubeUrl: "https://www.youtube.com/watch?v=f_EXSf2teB0",
-      },
-      {
         id: "ray-allen-game6",
         date: "2013.06.18",
         title: "레이 알렌의 6차전 3점슛",
@@ -122,12 +105,28 @@ const eras: Era[] = [
         youtubeUrl: "https://www.youtube.com/watch?v=tr6XsZVb-ZE",
       },
       {
+        id: "curry-12-threes",
+        date: "2016.02.27",
+        title: "커리, OKC전 3점슛 12개",
+        matchup: "골든스테이트 워리어스 121 : 118 (OT) 오클라호마시티 썬더",
+        boxScore: "스테픈 커리 46득점(3P 12/16), 한 경기 최다 3점슛 타이 기록. 연장 종료 0.6초 전 하프코트 부근에서 던진 3점슛이 그대로 꽂히며 결승골이 됐습니다.",
+        youtubeUrl: "https://www.youtube.com/watch?v=lgrKkNzRkGw",
+      },
+      {
         id: "lebron-kyrie-game7",
         date: "2016.06.19",
         title: "르브론의 '더 블록' & 카이리의 '더 샷' (파이널 7차전)",
         matchup: "클리블랜드 캐벌리어스 93 : 89 골든스테이트 워리어스",
         boxScore: "89-89로 맞선 종료 1분 50초 전, 르브론 제임스가 안드레 이궈달라의 레이업을 뒤에서 쫓아가 블록. 이어 종료 53초 전 카이리 어빙이 스테픈 커리를 상대로 결승 3점슛을 성공시키며 클리블랜드 프랜차이즈 첫 우승을 확정지었습니다.",
         youtubeUrl: "https://www.youtube.com/watch?v=kIF8zcj_J4Y",
+      },
+      {
+        id: "lillard-bad-shot",
+        date: "2019.04.23",
+        title: "데미안 릴라드의 '배드 샷' (1라운드 5차전)",
+        matchup: "포틀랜드 트레일블레이저스 118 : 115 오클라호마시티 썬더",
+        boxScore: "데미안 릴라드 50득점. 종료 직전 폴 조지를 앞에 두고 던진 37피트 3점슛이 그대로 들어가며 시리즈를 4승 1패로 마무리. 경기 후 조지가 \"나쁜 슛이었다\"고 평했고 릴라드도 이를 인정하면서 '배드 샷'이라는 별명이 붙었습니다.",
+        youtubeUrl: "https://www.youtube.com/watch?v=f_EXSf2teB0",
       },
       {
         id: "kawhi-buzzer-beater",
@@ -223,14 +222,16 @@ export default function ClassicsPage() {
               <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                 {game.boxScore}
               </p>
-              <a
-                href={game.youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-red-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-red-500"
-              >
-                ▶ 유튜브 하이라이트 보기
-              </a>
+              {game.youtubeUrl && (
+                <a
+                  href={game.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-red-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-red-500"
+                >
+                  ▶ 유튜브 하이라이트 보기
+                </a>
+              )}
             </section>
           ))}
         </div>
