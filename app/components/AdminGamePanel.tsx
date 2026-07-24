@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Card } from "@/lib/db";
+import type { Card, CardRarity } from "@/lib/db";
+import { nbaTeams } from "@/lib/nbaTeams";
 
 type UserRow = { id: number; username: string; balance: number };
 type OwnedCard = Card & { owned_count: number };
+
+const RARITIES: CardRarity[] = ["BRONZE", "SILVER", "GOLD", "LEGEND"];
 
 export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
   const [users, setUsers] = useState<UserRow[]>([]);
@@ -16,6 +19,17 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
   const [ownedCards, setOwnedCards] = useState<OwnedCard[]>([]);
   const [catalog, setCatalog] = useState<Card[]>([]);
   const [grantCardId, setGrantCardId] = useState<string>("");
+
+  const [editCardId, setEditCardId] = useState<string>("");
+  const [editForm, setEditForm] = useState<{ offRating: string; defRating: string; salary: string; teamSlug: string; rarity: CardRarity }>({
+    offRating: "",
+    defRating: "",
+    salary: "",
+    teamSlug: "",
+    rarity: "BRONZE",
+  });
+  const [editSaving, setEditSaving] = useState(false);
+  const [editMessage, setEditMessage] = useState<string | null>(null);
 
   function loadUsers() {
     setLoading(true);
@@ -103,9 +117,51 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
     loadOwnedCards(selectedUserId);
   }
 
+  function handleSelectEditCard(cardId: string) {
+    setEditCardId(cardId);
+    setEditMessage(null);
+    const card = catalog.find((c) => String(c.id) === cardId);
+    if (!card) return;
+    setEditForm({
+      offRating: String(card.off_rating),
+      defRating: String(card.def_rating),
+      salary: String(card.salary),
+      teamSlug: card.team_slug,
+      rarity: card.rarity,
+    });
+  }
+
+  async function handleSaveCardEdit() {
+    if (!editCardId) return;
+    setEditSaving(true);
+    setEditMessage(null);
+    try {
+      const res = await fetch(`/api/admin/game/catalog/${editCardId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          offRating: Number(editForm.offRating),
+          defRating: Number(editForm.defRating),
+          salary: Number(editForm.salary),
+          teamSlug: editForm.teamSlug,
+          rarity: editForm.rarity,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setEditMessage(data.error ?? "저장하지 못했습니다.");
+        return;
+      }
+      setEditMessage("저장되었습니다.");
+      loadCatalog();
+    } finally {
+      setEditSaving(false);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="flex h-[36rem] w-full max-w-3xl flex-col rounded-lg bg-white shadow-xl dark:bg-zinc-900">
+      <div className="flex h-[42rem] w-full max-w-4xl flex-col rounded-lg bg-white shadow-xl dark:bg-zinc-900">
         <div className="flex items-center justify-between border-b border-black/[.08] px-4 py-3 dark:border-white/[.145]">
           <h2 className="text-sm font-semibold text-black dark:text-zinc-50">게임 데이터 관리</h2>
           <button
@@ -114,6 +170,86 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
           >
             닫기
           </button>
+        </div>
+
+        <div className="flex flex-col gap-2 border-b border-black/[.08] px-4 py-3 dark:border-white/[.145]">
+          <h3 className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">카드 원본 수정</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={editCardId}
+              onChange={(e) => handleSelectEditCard(e.target.value)}
+              className="h-9 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+            >
+              <option value="">카드 선택...</option>
+              {catalog.map((card) => (
+                <option key={card.id} value={card.id}>
+                  [{card.rarity}] {card.name}
+                </option>
+              ))}
+            </select>
+
+            {editCardId && (
+              <>
+                <label className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+                  OFF
+                  <input
+                    type="number"
+                    value={editForm.offRating}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, offRating: e.target.value }))}
+                    className="h-9 w-16 rounded-full border border-black/[.08] bg-white px-2 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                  />
+                </label>
+                <label className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+                  DEF
+                  <input
+                    type="number"
+                    value={editForm.defRating}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, defRating: e.target.value }))}
+                    className="h-9 w-16 rounded-full border border-black/[.08] bg-white px-2 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                  />
+                </label>
+                <label className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+                  연봉($M)
+                  <input
+                    type="number"
+                    value={editForm.salary}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, salary: e.target.value }))}
+                    className="h-9 w-16 rounded-full border border-black/[.08] bg-white px-2 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                  />
+                </label>
+                <select
+                  value={editForm.teamSlug}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, teamSlug: e.target.value }))}
+                  className="h-9 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                >
+                  {nbaTeams.map((team) => (
+                    <option key={team.slug} value={team.slug}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={editForm.rarity}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, rarity: e.target.value as CardRarity }))}
+                  className="h-9 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                >
+                  {RARITIES.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={handleSaveCardEdit}
+                  disabled={editSaving}
+                  className="rounded-full bg-orange-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-40"
+                >
+                  {editSaving ? "저장 중..." : "저장"}
+                </button>
+              </>
+            )}
+            {editMessage && <span className="text-xs text-zinc-500 dark:text-zinc-400">{editMessage}</span>}
+          </div>
         </div>
 
         <div className="flex flex-1 overflow-hidden">
