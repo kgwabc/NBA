@@ -35,6 +35,12 @@ export default async function Home() {
           >
             🎴 카드 게임
           </Link>
+          <Link
+            href="/glossary"
+            className="rounded-full bg-teal-600 px-3 py-1.5 text-xs font-bold tracking-wide text-white shadow-sm transition-colors hover:bg-teal-500 sm:px-4 sm:py-2 sm:text-sm"
+          >
+            📖 용어 사전
+          </Link>
           <ChatButton
             isLoggedIn={!!session}
             username={session?.username}
