@@ -28,8 +28,8 @@ const eras: Era[] = [
         date: "1962.03.02",
         title: "윌트 체임벌린, 100득점",
         matchup: "필라델피아 워리어스 169 : 147 뉴욕 닉스",
-        boxScore: "체임벌린 100득점(FG 36/63, FT 28/32) 25리바운드. NBA 역사상 한 경기 최다 득점 기록으로, 지금까지도 깨지지 않고 있습니다.",
-        youtubeUrl: "https://www.youtube.com/watch?v=W5CYdC_VcOA",
+        boxScore: "체임벌린 100득점(FG 36/63, FT 28/32) 25리바운드. NBA 역사상 한 경기 최다 득점 기록으로, 지금까지도 깨지지 않고 있습니다. 당시 경기 영상은 대부분 소실되어 라디오 중계와 일부 사진만 남아있습니다.",
+        youtubeUrl: "https://www.youtube.com/watch?v=CfqRx8cA7b4",
       },
       {
         id: "willis-reed",
@@ -98,6 +98,22 @@ const eras: Era[] = [
     label: "2010년대",
     games: [
       {
+        id: "curry-12-threes",
+        date: "2016.02.27",
+        title: "커리, OKC전 3점슛 12개",
+        matchup: "골든스테이트 워리어스 121 : 118 (OT) 오클라호마시티 썬더",
+        boxScore: "스테픈 커리 46득점(3P 12/16), 한 경기 최다 3점슛 타이 기록. 연장 종료 0.6초 전 하프코트 부근에서 던진 3점슛이 그대로 꽂히며 결승골이 됐습니다.",
+        youtubeUrl: "https://www.youtube.com/watch?v=lgrKkNzRkGw",
+      },
+      {
+        id: "lillard-bad-shot",
+        date: "2019.04.23",
+        title: "데미안 릴라드의 '배드 샷' (1라운드 5차전)",
+        matchup: "포틀랜드 트레일블레이저스 118 : 115 오클라호마시티 썬더",
+        boxScore: "데미안 릴라드 50득점. 종료 직전 폴 조지를 앞에 두고 던진 37피트 3점슛이 그대로 들어가며 시리즈를 4승 1패로 마무리. 경기 후 조지가 \"나쁜 슛이었다\"고 평했고 릴라드도 이를 인정하면서 '배드 샷'이라는 별명이 붙었습니다.",
+        youtubeUrl: "https://www.youtube.com/watch?v=f_EXSf2teB0",
+      },
+      {
         id: "ray-allen-game6",
         date: "2013.06.18",
         title: "레이 알렌의 6차전 3점슛",
@@ -120,6 +136,28 @@ const eras: Era[] = [
         matchup: "토론토 랩터스 92 : 90 필라델피아 세븐티식서스",
         boxScore: "카와이 레너드 41득점. 종료 버저와 동시에 던진 코너 점프슛이 림을 네 번 맞고 들어가며 시리즈를 매듭지었습니다. NBA 플레이오프 역사상 최초의 7차전 버저비터 승리로 기록됐습니다.",
         youtubeUrl: "https://www.youtube.com/watch?v=sazwLeaXdEQ",
+      },
+    ],
+  },
+  {
+    id: "2020s",
+    label: "2020년대",
+    games: [
+      {
+        id: "haliburton-finals-game1",
+        date: "2025.06.05",
+        title: "할리버튼의 파이널 1차전 위닝샷",
+        matchup: "인디애나 페이서스 111 : 110 오클라호마시티 썬더",
+        boxScore: "플레이오프 시작 전 선수 투표에서 '가장 과대평가된 선수' 1위에 오른 타이리스 할리버튼이, 4쿼터 한때 15점차로 뒤지던 팀을 대역전승으로 이끌었습니다. 종료 0.3초 전 던진 21피트 점프슛이 경기 유일한 페이서스 리드를 만들며 그대로 승부를 갈랐습니다.",
+        youtubeUrl: "https://www.youtube.com/watch?v=xJtJR6qrg-I",
+      },
+      {
+        id: "anunoby-tip-in",
+        date: "2026.06.10",
+        title: "아누노비의 팁인 (파이널 4차전)",
+        matchup: "뉴욕 닉스 107 : 106 샌안토니오 스퍼스",
+        boxScore: "3쿼터 한때 29점차로 뒤지던 닉스가 파이널 역사상 최대 점수차 역전승을 완성. 종료 1.2초 전 오G 아누노비의 팁인이 결승골이 되며 닉스는 시리즈 3승 1패로 앞서갔고, 이후 시리즈를 우승하며 53년 만에 챔피언에 올랐습니다.",
+        youtubeUrl: "https://www.youtube.com/watch?v=sOQKRjP3ZJk",
       },
     ],
   },
