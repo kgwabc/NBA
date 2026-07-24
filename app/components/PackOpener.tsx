@@ -119,9 +119,9 @@ export default function PackOpener() {
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       {pulledCard && (
-        <div className="card-flip-container h-56 w-40">
+        <div className="card-flip-container h-[26rem] w-64">
           <div className={`card-flip-inner ${flipped ? "is-flipped" : ""}`}>
-            <div className="card-face flex items-center justify-center rounded-lg bg-zinc-800 text-3xl">🎴</div>
+            <div className="card-face flex items-center justify-center rounded-2xl bg-zinc-800 text-5xl">🎴</div>
             <div className={`card-face card-face-back ${flipped ? SHAKE_CLASS[pulledCard.rarity] ?? "" : ""}`}>
               <CardComponent card={pulledCard.card} />
             </div>

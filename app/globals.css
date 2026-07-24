@@ -51,27 +51,46 @@ body {
 
 .card-rarity-bronze {
   border: 2px solid #a97142;
-  box-shadow: 0 0 6px rgba(169, 113, 66, 0.4);
+  box-shadow: 0 0 10px rgba(169, 113, 66, 0.45), 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 .card-rarity-silver {
   border: 2px solid #c0c0c0;
-  box-shadow: 0 0 8px rgba(192, 192, 192, 0.5);
+  box-shadow: 0 0 14px rgba(192, 192, 192, 0.55), 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 .card-rarity-gold {
   border: 2px solid #ffd700;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.65), 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 .card-rarity-legend {
   border: 2px solid #ff6a00;
-  box-shadow: 0 0 20px rgba(255, 106, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 28px rgba(255, 106, 0, 0.85), 0 0 55px rgba(255, 215, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
   animation: legend-flame 1.2s ease-in-out infinite alternate;
 }
 @keyframes legend-flame {
   from {
-    box-shadow: 0 0 20px rgba(255, 106, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 28px rgba(255, 106, 0, 0.85), 0 0 55px rgba(255, 215, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
   }
   to {
-    box-shadow: 0 0 30px rgba(255, 106, 0, 1), 0 0 60px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 40px rgba(255, 106, 0, 1), 0 0 80px rgba(255, 215, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* 골드/레전드 카드 위를 대각선으로 스윽 지나가는 홀로그램 샤인 */
+.card-shine {
+  background: linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.55) 50%, transparent 75%);
+  background-size: 250% 250%;
+  background-position: -120% -120%;
+  mix-blend-mode: overlay;
+  animation: shine-sweep 3.2s ease-in-out infinite;
+}
+@keyframes shine-sweep {
+  0%,
+  15% {
+    background-position: -120% -120%;
+  }
+  60%,
+  100% {
+    background-position: 120% 120%;
   }
 }
 

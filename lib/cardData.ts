@@ -10,6 +10,7 @@ export type CardSeed = {
   salary: number;
   synergyTags: string[];
   flavorText: string;
+  imageUrl?: string;
 };
 
 export const cardSeeds: CardSeed[] = [
@@ -24,6 +25,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 45,
     synergyTags: ["WARRIORS"],
     flavorText: "역대급 3점슛 능력으로 '스몰볼' 시대를 연 워리어스의 에이스.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/40/Stephen_Curry_%2833140701266%29.jpg",
   },
   {
     name: "마이클 조던",
@@ -35,6 +37,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 45,
     synergyTags: ["BULLS"],
     flavorText: "농구 역사상 최고의 선수로 꼽히는 불스의 전설.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Jordan_by_Lipofsky_16577.jpg",
   },
   {
     name: "르브론 제임스",
@@ -46,6 +49,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 44,
     synergyTags: ["CAVALIERS"],
     flavorText: "오하이오 출신의 슈퍼스타, 클리블랜드에 첫 챔피언을 안긴 왕.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/60/Lebron_dunking_finals_2016.jpg",
   },
 
   // GOLD (7)
@@ -59,6 +63,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 30,
     synergyTags: ["WARRIORS"],
     flavorText: "커리와 함께 '스플래시 브라더스'를 이룬 정교한 슈터.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/d/de/Klay_Thompson_vs._Jared_Dudley.jpg",
   },
   {
     name: "야니스 아데토쿤보",
@@ -70,6 +75,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 31,
     synergyTags: ["BUCKS"],
     flavorText: "벅스를 50년 만의 챔피언으로 이끈 압도적 신체능력의 포워드.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Giannis_Antetokounmpo_%2851916230730%29.jpg",
   },
   {
     name: "니콜라 요키치",
@@ -81,6 +87,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 31,
     synergyTags: ["NUGGETS"],
     flavorText: "너기츠 구단 역사상 첫 챔피언을 이끈 패싱 센터.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Nikola_Jokic_%2840980299891%29.jpg",
   },
   {
     name: "루카 돈치치",
@@ -92,6 +99,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 30,
     synergyTags: ["MAVERICKS"],
     flavorText: "매버릭스를 파이널까지 이끈 만능 플레이메이커.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/5/5a/Luka_Doncic_vs_Dean_Wade%2C_Dallas_Mavericks_vs_Cleveland_Cavaliers_on_May_9%2C_2021.jpg",
   },
   {
     name: "조엘 엠비드",
@@ -103,6 +112,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 30,
     synergyTags: ["76ERS"],
     flavorText: "세븐티식서스의 프랜차이즈 센터, 압도적 골밑 지배력.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Joel_Embiid_layup_2019.jpg",
   },
   {
     name: "데빈 부커",
@@ -114,6 +124,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 29,
     synergyTags: ["SUNS"],
     flavorText: "선즈 구단 역사상 최다 득점자로 성장한 슈팅가드.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/70/Devin_Booker_%2830362063153%29.jpg",
   },
   {
     name: "앤서니 에드워즈",
@@ -125,6 +136,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 29,
     synergyTags: ["TIMBERWOLVES"],
     flavorText: "폭발적인 운동능력으로 팀버울브스를 이끄는 차세대 에이스.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/c/c4/Anthony_Edwards_Kentavious_Caldwell-Pope_%2851734745028%29_%28cropped%29.jpg",
   },
 
   // SILVER (12)
@@ -138,6 +151,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 16,
     synergyTags: ["CLIPPERS"],
     flavorText: "뛰어난 코트 비전을 지닌 베테랑 포인트가드.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Chris_Paul_floater_20131118_Clippers_v_Grizzles.jpg",
   },
   {
     name: "트레이 영",
@@ -149,6 +163,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 15,
     synergyTags: ["HAWKS"],
     flavorText: "뛰어난 슈팅과 패스로 호크스를 이끄는 포인트가드.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/0/07/NBA_2021_-_Wizards_vs._Hawks%2C_Oct_29_2021_101_%2851637738135%29_%28cropped%29.jpg",
   },
   {
     name: "자 모란트",
@@ -160,6 +176,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 17,
     synergyTags: ["GRIZZLIES"],
     flavorText: "폭발적인 덩크와 스피드로 그리즐리스를 끌어올린 가드.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Ja_Morant_%2851665800185%29.jpg",
   },
   {
     name: "제일런 브라운",
@@ -171,6 +188,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 16,
     synergyTags: ["CELTICS"],
     flavorText: "셀틱스의 균형 잡힌 공수겸비형 슈팅가드.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Celtics_at_Wizards_2024-12-035.jpg",
   },
   {
     name: "데자운테 머레이",
@@ -182,6 +200,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 15,
     synergyTags: ["PELICANS"],
     flavorText: "펠리컨스의 다재다능한 콤보 가드.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Dejonte_Murray_%2851916456198%29.jpg/500px-Dejonte_Murray_%2851916456198%29.jpg",
   },
   {
     name: "폴 조지",
@@ -193,6 +213,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 17,
     synergyTags: ["PACERS"],
     flavorText: "페이서스에서 4회 올스타에 선정된 균형잡힌 포워드.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Anthony_Tolliver_defending_Paul_George.jpg/500px-Anthony_Tolliver_defending_Paul_George.jpg",
   },
   {
     name: "브랜든 인그램",
@@ -204,6 +226,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 15,
     synergyTags: ["PELICANS"],
     flavorText: "부드러운 슈팅 터치를 가진 펠리컨스의 스코어러.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Brandon_Ingram_2020.jpg/500px-Brandon_Ingram_2020.jpg",
   },
   {
     name: "파스칼 시아캄",
@@ -215,6 +238,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 15,
     synergyTags: ["RAPTORS"],
     flavorText: "랩터스의 활동량 넘치는 파워포워드.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/1_pascal_siakam_2019_nba_finals.jpg/500px-1_pascal_siakam_2019_nba_finals.jpg",
   },
   {
     name: "줄리어스 랜들",
@@ -226,6 +251,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 15,
     synergyTags: ["KNICKS"],
     flavorText: "닉스의 힘과 스피드를 겸비한 파워포워드.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Julius_Randle_with_Lakers.jpg/500px-Julius_Randle_with_Lakers.jpg",
   },
   {
     name: "뱀 아데바요",
@@ -237,6 +264,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 16,
     synergyTags: ["HEAT"],
     flavorText: "히트의 수비와 패스에 강점을 지닌 센터.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Adebayo_Hachimura_%28cropped%29.jpg/500px-Adebayo_Hachimura_%28cropped%29.jpg",
   },
   {
     name: "도만타스 사보니스",
@@ -248,6 +277,8 @@ export const cardSeeds: CardSeed[] = [
     salary: 17,
     synergyTags: ["KINGS"],
     flavorText: "킹스의 리바운드와 패스에 능한 빅맨.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Domantas_Sabonis_%2832768447291%29.jpg/500px-Domantas_Sabonis_%2832768447291%29.jpg",
   },
   {
     name: "카를-앤소니 타운스",
@@ -259,6 +290,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 16,
     synergyTags: ["KNICKS"],
     flavorText: "슈팅 능력을 갖춘 현대적인 빅맨.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Towns-Gibson-20190120.jpg/500px-Towns-Gibson-20190120.jpg",
   },
 
   // BRONZE (18)

@@ -72,7 +72,7 @@ export default function CollectionGrid() {
   }
 
   return (
-    <div className="flex w-full max-w-5xl flex-col gap-6">
+    <div className="flex w-full max-w-6xl flex-col gap-6">
       <div className="flex gap-2">
         {RARITY_FILTERS.map((option) => (
           <button
@@ -95,7 +95,7 @@ export default function CollectionGrid() {
       {filteredCards.length === 0 ? (
         <p className="text-center text-zinc-500 dark:text-zinc-400">보유한 카드가 없습니다. 팩을 열어보세요!</p>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {filteredCards.map((card) => (
             <div key={card.id} className="flex flex-col gap-2">
               <CardComponent card={card} ownedCount={card.owned_count} />

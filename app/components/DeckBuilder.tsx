@@ -100,7 +100,7 @@ export default function DeckBuilder() {
   const gaugePercent = Math.min(100, (validation.totalSalary / SALARY_CAP) * 100);
 
   return (
-    <div className="flex w-full max-w-3xl flex-col gap-8">
+    <div className="flex w-full max-w-5xl flex-col gap-8">
       <section className="flex flex-col gap-4">
         <input
           type="text"
@@ -109,7 +109,7 @@ export default function DeckBuilder() {
           className="h-10 w-full max-w-xs rounded-full border border-black/[.08] bg-white px-4 text-sm text-black outline-none focus:border-black/40 dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
         />
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {REQUIRED_POSITIONS.map((pos) => {
             const slot = slots[pos];
             return (
@@ -121,7 +121,7 @@ export default function DeckBuilder() {
                   <button
                     type="button"
                     onClick={() => setPickerPosition(pos)}
-                    className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-black/[.15] text-xs text-zinc-400 hover:border-black/40 dark:border-white/[.2]"
+                    className="flex aspect-[3/4] items-center justify-center rounded-2xl border-2 border-dashed border-black/[.15] text-xs text-zinc-400 hover:border-black/40 dark:border-white/[.2]"
                   >
                     카드 선택
                   </button>
@@ -208,7 +208,7 @@ export default function DeckBuilder() {
 
       {pickerPosition && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="flex max-h-[70vh] w-full max-w-2xl flex-col gap-4 overflow-y-auto rounded-lg bg-white p-4 dark:bg-zinc-900">
+          <div className="flex max-h-[80vh] w-full max-w-3xl flex-col gap-4 overflow-y-auto rounded-lg bg-white p-4 dark:bg-zinc-900">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-black dark:text-zinc-50">{pickerPosition} 카드 선택</h3>
               <button
@@ -219,7 +219,7 @@ export default function DeckBuilder() {
                 닫기
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               {collection
                 .filter((c) => c.position === pickerPosition)
                 .map((card) => (

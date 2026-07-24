@@ -26,6 +26,15 @@ function createConnection(): Client {
 // Reuse the connection (and bootstrap) across hot reloads in dev instead of redoing it per request.
 const db = global.__db ?? (global.__db = createConnection());
 
+// SQLite has no "ADD COLUMN IF NOT EXISTS", so check PRAGMA table_info first to keep this safe to re-run.
+async function ensureColumn(table: string, column: string, ddl: string): Promise<void> {
+  const info = await db.execute(`PRAGMA table_info(${table})`);
+  const exists = info.rows.some((row) => row.name === column);
+  if (!exists) {
+    await db.execute(`ALTER TABLE ${table} ADD COLUMN ${ddl}`);
+  }
+}
+
 function ensureReady(): Promise<void> {
   if (!global.__dbInit) {
     global.__dbInit = (async () => {
@@ -126,6 +135,7 @@ function ensureReady(): Promise<void> {
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_decks_user ON decks(user_id);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_pack_openings_user ON pack_openings(user_id, created_at);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_battle_history_user ON battle_history(user_id, created_at);`);
+      await ensureColumn("cards", "image_url", "image_url TEXT");
     })();
   }
   return global.__dbInit;
@@ -177,6 +187,7 @@ export type Card = {
   salary: number;
   synergy_tags: string;
   flavor_text: string | null;
+  image_url: string | null;
   created_at: string;
 };
 

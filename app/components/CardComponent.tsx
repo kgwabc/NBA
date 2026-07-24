@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { Card } from "@/lib/db";
 
 const RARITY_LABELS: Record<Card["rarity"], string> = {
@@ -14,42 +17,81 @@ const RARITY_CLASS: Record<Card["rarity"], string> = {
   LEGEND: "card-rarity-legend",
 };
 
+const PLACEHOLDER_GRADIENT: Record<Card["rarity"], string> = {
+  BRONZE: "from-amber-700 to-amber-950",
+  SILVER: "from-zinc-400 to-zinc-600",
+  GOLD: "from-yellow-500 to-amber-700",
+  LEGEND: "from-orange-500 via-red-500 to-fuchsia-700",
+};
+
 export type CardComponentProps = {
-  card: Pick<Card, "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary">;
+  card: Pick<
+    Card,
+    "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url"
+  >;
   ownedCount?: number;
   selected?: boolean;
   onClick?: () => void;
 };
 
 export default function CardComponent({ card, ownedCount, selected, onClick }: CardComponentProps) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const showPhoto = !!card.image_url && !imageFailed;
+
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className={`flex flex-col gap-2 rounded-lg bg-white p-3 text-left transition-transform dark:bg-zinc-900 ${
+      className={`group relative flex w-full flex-col overflow-hidden rounded-2xl bg-white text-left transition-all duration-300 dark:bg-zinc-900 ${
         RARITY_CLASS[card.rarity]
-      } ${onClick ? "cursor-pointer hover:-translate-y-0.5" : ""} ${
-        selected ? "ring-2 ring-offset-2 ring-orange-500 dark:ring-offset-black" : ""
+      } ${onClick ? "cursor-pointer hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-2xl hover:brightness-110" : ""} ${
+        selected ? "ring-4 ring-orange-500 ring-offset-2 dark:ring-offset-black" : ""
       }`}
     >
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-semibold text-black dark:text-zinc-50">{card.name}</p>
-        <span className="shrink-0 rounded-full bg-zinc-200 px-2 py-0.5 text-[10px] font-bold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-zinc-200 dark:bg-zinc-800">
+        {showPhoto ? (
+          // eslint-disable-next-line @next/next/no-img-element -- external Wikimedia photo, not a local/optimizable asset
+          <img
+            src={card.image_url!}
+            alt={card.name}
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+            className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div
+            className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${PLACEHOLDER_GRADIENT[card.rarity]}`}
+          >
+            <span className="text-6xl font-black text-white/90 drop-shadow-lg">{card.name.charAt(0)}</span>
+          </div>
+        )}
+
+        {(card.rarity === "GOLD" || card.rarity === "LEGEND") && (
+          <div className="card-shine pointer-events-none absolute inset-0" />
+        )}
+
+        <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
           {card.position}
         </span>
+
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-2 pt-8">
+          <p className="text-base font-bold text-white drop-shadow-md">{card.name}</p>
+          <p className="text-xs font-medium text-white/80">
+            {RARITY_LABELS[card.rarity]} · {card.team_slug.toUpperCase()}
+          </p>
+        </div>
       </div>
-      <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-        {RARITY_LABELS[card.rarity]} · {card.team_slug.toUpperCase()}
-      </p>
-      <div className="flex items-center gap-3 text-xs text-zinc-600 dark:text-zinc-400">
+
+      <div className="flex items-center justify-between gap-2 px-3 py-2.5 text-sm text-zinc-600 dark:text-zinc-400">
         <span>OFF {card.off_rating}</span>
         <span>DEF {card.def_rating}</span>
         <span>${card.salary}M</span>
       </div>
+
       {typeof ownedCount === "number" && (
-        <span className="self-end text-[10px] font-semibold text-zinc-400 dark:text-zinc-500">
-          보유 {ownedCount}장
+        <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+          × {ownedCount}
         </span>
       )}
     </button>
