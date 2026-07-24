@@ -67,12 +67,8 @@ export default function TeamGrid({ teams }: TeamGridProps) {
             className="flex flex-col gap-3 rounded-lg border border-black/[.08] p-4 transition-colors hover:border-black/40 dark:border-white/[.145] dark:hover:border-white/40"
           >
             <div
-              className="flex h-16 w-16 items-center justify-center rounded-full text-sm font-bold text-white shadow-lg sm:h-20 sm:w-20 sm:text-base"
-              style={{
-                background: `linear-gradient(135deg, ${team.primaryColor}, ${team.secondaryColor})`,
-                border: `3px solid ${team.secondaryColor}`,
-                boxShadow: `0 4px 14px ${team.primaryColor}55`,
-              }}
+              className="flex h-16 w-16 items-center justify-center rounded-full text-sm font-bold text-white"
+              style={{ backgroundColor: team.primaryColor }}
             >
               {team.abbreviation}
             </div>

@@ -29,13 +29,8 @@ export default async function TeamDetailPage({
         style={{ backgroundColor: team.primaryColor }}
       >
         <div
-          className="flex h-24 w-24 items-center justify-center rounded-full border-4 text-xl font-extrabold tracking-wide shadow-xl sm:h-28 sm:w-28 sm:text-2xl"
-          style={{
-            background: `linear-gradient(135deg, ${team.primaryColor}, ${team.secondaryColor})`,
-            borderColor: team.secondaryColor,
-            color: "#fff",
-            boxShadow: `0 6px 24px ${team.primaryColor}66`,
-          }}
+          className="flex h-20 w-20 items-center justify-center rounded-full border-4 text-lg font-bold"
+          style={{ borderColor: team.secondaryColor }}
         >
           {team.abbreviation}
         </div>

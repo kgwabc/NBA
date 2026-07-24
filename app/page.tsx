@@ -6,6 +6,7 @@ import ChatButton from "@/app/components/ChatButton";
 import AdminButton from "@/app/components/AdminButton";
 import AdminGameButton from "@/app/components/AdminGameButton";
 import TeamGrid from "@/app/components/TeamGrid";
+import TeamSwitcher from "@/app/components/TeamSwitcher";
 import { nbaTeams } from "@/lib/nbaTeams";
 
 export default async function Home() {
@@ -47,6 +48,7 @@ export default async function Home() {
               <p className="text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                 <span className="font-medium text-black dark:text-zinc-50">{session.username}</span>님
               </p>
+              <TeamSwitcher />
               <LogoutButton />
             </div>
           ) : (
