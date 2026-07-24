@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import type { NbaTeam } from "@/lib/nbaTeams";
 
 type TeamThemeContextValue = {
@@ -18,6 +18,10 @@ export function TeamThemeProvider({
   children: ReactNode;
 }) {
   const [team, setTeamState] = useState<NbaTeam | null>(initialTeam);
+
+  useEffect(() => {
+    setTeamState(initialTeam);
+  }, [initialTeam]);
 
   const setTeam = useCallback(async (next: NbaTeam) => {
     const previous = team;
