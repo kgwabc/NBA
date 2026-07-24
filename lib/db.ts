@@ -136,6 +136,7 @@ function ensureReady(): Promise<void> {
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_pack_openings_user ON pack_openings(user_id, created_at);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_battle_history_user ON battle_history(user_id, created_at);`);
       await ensureColumn("cards", "image_url", "image_url TEXT");
+      await ensureColumn("users", "favorite_team_slug", "favorite_team_slug TEXT");
     })();
   }
   return global.__dbInit;
@@ -163,8 +164,17 @@ export type User = {
   id: number;
   username: string;
   password_hash: string;
+  favorite_team_slug: string | null;
   created_at: string;
 };
+
+export async function getUserById(userId: number): Promise<User | undefined> {
+  return dbGet<User>("SELECT * FROM users WHERE id = ?", [userId]);
+}
+
+export async function setUserFavoriteTeam(userId: number, teamSlug: string | null): Promise<void> {
+  await dbRun("UPDATE users SET favorite_team_slug = ? WHERE id = ?", [teamSlug, userId]);
+}
 
 export type ChatMessage = {
   id: number;

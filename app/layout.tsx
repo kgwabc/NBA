@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { getCurrentUserWithTeam } from "@/lib/currentUser";
+import { TeamThemeProvider } from "@/app/components/TeamThemeProvider";
+import TeamBackground from "@/app/components/TeamBackground";
+import FavoriteTeamBanner from "@/app/components/FavoriteTeamBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,17 +21,25 @@ export const metadata: Metadata = {
   description: "NBA 30개 팀을 소개하는 웹사이트",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { session, team: initialTeam } = await getCurrentUserWithTeam();
+
   return (
     <html
       lang="ko"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <TeamThemeProvider initialTeam={initialTeam}>
+          <TeamBackground />
+          <FavoriteTeamBanner isLoggedIn={!!session} />
+          {children}
+        </TeamThemeProvider>
+      </body>
     </html>
   );
 }

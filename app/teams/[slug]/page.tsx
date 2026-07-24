@@ -23,14 +23,19 @@ export default async function TeamDetailPage({
   const famousPlayers = getFamousPlayers(team.slug);
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex min-h-screen flex-col font-sans">
       <header
         className="flex flex-col gap-4 px-6 py-10 text-white sm:flex-row sm:items-center sm:gap-6"
         style={{ backgroundColor: team.primaryColor }}
       >
         <div
-          className="flex h-20 w-20 items-center justify-center rounded-full border-4 text-lg font-bold"
-          style={{ borderColor: team.secondaryColor }}
+          className="flex h-24 w-24 items-center justify-center rounded-full border-4 text-xl font-extrabold tracking-wide shadow-xl sm:h-28 sm:w-28 sm:text-2xl"
+          style={{
+            background: `linear-gradient(135deg, ${team.primaryColor}, ${team.secondaryColor})`,
+            borderColor: team.secondaryColor,
+            color: "#fff",
+            boxShadow: `0 6px 24px ${team.primaryColor}66`,
+          }}
         >
           {team.abbreviation}
         </div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbGet, dbRun, User } from "@/lib/db";
 import { createSessionToken, hashPassword, SESSION_COOKIE, SESSION_DURATION_SECONDS } from "@/lib/auth";
+import { getTeamBySlug } from "@/lib/nbaTeams";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{4,20}$/;
 
@@ -24,11 +25,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "이미 사용 중인 아이디입니다." }, { status: 409 });
   }
 
+  const favoriteTeamSlug =
+    typeof body?.favoriteTeamSlug === "string" ? body.favoriteTeamSlug : null;
+  const team = favoriteTeamSlug ? getTeamBySlug(favoriteTeamSlug) : null;
+
   const passwordHash = await hashPassword(password);
-  const result = await dbRun("INSERT INTO users (username, password_hash) VALUES (?, ?)", [
-    username,
-    passwordHash,
-  ]);
+  const result = await dbRun(
+    "INSERT INTO users (username, password_hash, favorite_team_slug) VALUES (?, ?, ?)",
+    [username, passwordHash, team?.slug ?? null],
+  );
 
   const user: Pick<User, "id" | "username"> = { id: Number(result.lastInsertRowid), username };
   const token = await createSessionToken({ userId: user.id, username: user.username });
