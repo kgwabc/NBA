@@ -41,6 +41,12 @@ export default async function Home() {
           >
             📖 용어 사전
           </Link>
+          <Link
+            href="/classics"
+            className="rounded-full bg-amber-600 px-3 py-1.5 text-xs font-bold tracking-wide text-white shadow-sm transition-colors hover:bg-amber-500 sm:px-4 sm:py-2 sm:text-sm"
+          >
+            🕰️ 명경기 도서관
+          </Link>
           <ChatButton
             isLoggedIn={!!session}
             username={session?.username}
