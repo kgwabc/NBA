@@ -10,7 +10,9 @@ export default function TeamBackground() {
     <div
       aria-hidden
       className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ backgroundColor: `${team.primaryColor}26` }}
+      style={{
+        backgroundImage: `linear-gradient(to bottom, ${team.primaryColor}40 0%, ${team.primaryColor}00 55%)`,
+      }}
     />
   );
 }
