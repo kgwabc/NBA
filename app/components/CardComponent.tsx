@@ -24,6 +24,14 @@ const PLACEHOLDER_GRADIENT: Record<Card["rarity"], string> = {
   LEGEND: "from-orange-500 via-red-500 to-fuchsia-700",
 };
 
+// 기본 크롭(상단 중앙)으로는 사진 속 선수가 프레임 밖으로 잘려나가는 카드에 한해
+// 이름으로 개별 크롭 위치를 지정한다. 없는 카드는 기존 기본값(top center)을 그대로 쓴다.
+const IMAGE_POSITION_OVERRIDES: Record<string, string> = {
+  // 원본 사진(3941x2382, 가로로 매우 넓음)에서 커리가 중앙이 아닌 좌측 35~40% 지점에 있어
+  // 기본 중앙 크롭으로는 잘려나갔다 — 실제 위치에 맞춰 가로 크롭 기준점만 조정.
+  "스테판 커리": "37% center",
+};
+
 export type CardComponentProps = {
   card: Pick<
     Card,
@@ -57,7 +65,8 @@ export default function CardComponent({ card, ownedCount, selected, onClick }: C
             alt={card.name}
             loading="lazy"
             onError={() => setImageFailed(true)}
-            className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+            style={{ objectPosition: IMAGE_POSITION_OVERRIDES[card.name] ?? "top" }}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
           <div
