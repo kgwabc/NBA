@@ -70,10 +70,8 @@ export default function TeamPicker({ variant, onPick, onSkip, selectedSlug }: Te
             }`}
           >
             <div
-              className="flex h-12 w-12 items-center justify-center rounded-full text-xs font-bold text-white shadow"
-              style={{
-                background: `linear-gradient(135deg, ${team.primaryColor}, ${team.secondaryColor})`,
-              }}
+              className="flex h-12 w-12 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{ backgroundColor: team.primaryColor }}
             >
               {team.abbreviation}
             </div>
