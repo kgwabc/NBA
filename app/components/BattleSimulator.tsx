@@ -209,6 +209,7 @@ export default function BattleSimulator() {
       if (index >= data.events.length) {
         setFinalResult(data);
         setLastScore(null);
+        setCurrentClock("4쿼터 0:00");
         setRunning(false);
         return;
       }
