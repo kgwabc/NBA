@@ -244,17 +244,19 @@ export default function BattleSimulator() {
 
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
+      {(running || visibleEvents.length > 0) && (
+        <div className="flex items-center justify-center gap-8 text-4xl font-black text-black sm:text-5xl dark:text-zinc-50">
+          <span>{liveUserScore}</span>
+          <span className="text-base font-normal text-zinc-400 sm:text-lg">VS</span>
+          <span>{liveOpponentScore}</span>
+        </div>
+      )}
+
       <LineupGrid title="내 팀" cards={myCards} team="user" lastScore={lastScore} />
       <LineupGrid title="상대 팀" cards={opponentCards} team="opponent" lastScore={lastScore} />
 
       {(running || visibleEvents.length > 0) && (
         <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-center gap-6 text-2xl font-bold text-black dark:text-zinc-50">
-            <span>{liveUserScore}</span>
-            <span className="text-sm font-normal text-zinc-400">VS</span>
-            <span>{liveOpponentScore}</span>
-          </div>
-
           <div className="flex max-h-64 flex-col-reverse gap-1 overflow-y-auto rounded-lg border border-black/[.08] p-3 dark:border-white/[.145]">
             {[...visibleEvents].reverse().map((event, idx) => (
               <p key={idx} className="battle-event-line text-xs text-zinc-600 dark:text-zinc-400">
