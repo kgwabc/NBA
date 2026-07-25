@@ -39,9 +39,10 @@ export type CardComponentProps = {
   >;
   selected?: boolean;
   onClick?: () => void;
+  hideFlavorText?: boolean;
 };
 
-export default function CardComponent({ card, selected, onClick }: CardComponentProps) {
+export default function CardComponent({ card, selected, onClick, hideFlavorText }: CardComponentProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const showPhoto = !!card.image_url && !imageFailed;
 
@@ -93,7 +94,7 @@ export default function CardComponent({ card, selected, onClick }: CardComponent
         <span>${card.salary}M</span>
       </div>
 
-      {card.flavor_text && (
+      {card.flavor_text && !hideFlavorText && (
         <p className="line-clamp-2 px-3 pb-2.5 text-xs italic text-zinc-500 dark:text-zinc-400">{card.flavor_text}</p>
       )}
 

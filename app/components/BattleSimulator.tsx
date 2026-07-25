@@ -103,7 +103,7 @@ function LineupGrid({
           const key = isScoring ? `${card.name}-${lastScore.seq}` : card.name;
           return (
             <div key={key} className={`relative ${isScoring ? "score-ring-pulse" : ""}`}>
-              <CardComponent card={card} />
+              <CardComponent card={card} hideFlavorText />
               {isScoring && (
                 <span className="score-popup pointer-events-none absolute left-1/2 top-1/3 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-orange-500 px-3 py-1 text-sm font-black text-white shadow-lg">
                   +{lastScore.points} 득점!
