@@ -97,6 +97,14 @@ function ensureReady(): Promise<void> {
           created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
       `);
+      await db.execute(`
+        CREATE TABLE IF NOT EXISTS roster_slots (
+          user_id INTEGER NOT NULL REFERENCES users(id),
+          position TEXT NOT NULL,
+          user_card_id INTEGER NOT NULL REFERENCES user_cards(id),
+          PRIMARY KEY (user_id, position)
+        );
+      `);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_user_cards_user ON user_cards(user_id);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_user_cards_card ON user_cards(card_id);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_pack_openings_user ON pack_openings(user_id, created_at);`);
@@ -189,5 +197,11 @@ export type PackOpening = {
   result_card_id: number;
   result_rarity: CardRarity;
   created_at: string;
+};
+
+export type RosterSlotRow = {
+  user_id: number;
+  position: CardPosition;
+  user_card_id: number;
 };
 
