@@ -163,6 +163,7 @@ export default function BattleSimulator() {
   const [visibleEvents, setVisibleEvents] = useState<ScoringEvent[]>([]);
   const [liveUserScore, setLiveUserScore] = useState(0);
   const [liveOpponentScore, setLiveOpponentScore] = useState(0);
+  const [currentClock, setCurrentClock] = useState("1쿼터 12:00");
   const [lastScore, setLastScore] = useState<LastScore | null>(null);
   const [finalResult, setFinalResult] = useState<BattleResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -183,6 +184,7 @@ export default function BattleSimulator() {
     setVisibleEvents([]);
     setLiveUserScore(0);
     setLiveOpponentScore(0);
+    setCurrentClock("1쿼터 12:00");
     setLastScore(null);
     setRunning(true);
 
@@ -217,6 +219,7 @@ export default function BattleSimulator() {
       setVisibleEvents((prev) => [...prev, event]);
       setLiveUserScore(userScore);
       setLiveOpponentScore(opponentScore);
+      setCurrentClock(event.time);
       scoreSeqRef.current += 1;
       setLastScore({ team: event.team, name: event.scorerName, points: event.points, seq: scoreSeqRef.current });
       index++;
@@ -247,7 +250,10 @@ export default function BattleSimulator() {
       {(running || visibleEvents.length > 0) && (
         <div className="flex items-center justify-center gap-8 text-4xl font-black text-black sm:text-5xl dark:text-zinc-50">
           <span>{liveUserScore}</span>
-          <span className="text-base font-normal text-zinc-400 sm:text-lg">VS</span>
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="text-base font-normal text-zinc-400 sm:text-lg">VS</span>
+            <span className="whitespace-nowrap text-xs font-semibold text-zinc-500 dark:text-zinc-400">{currentClock}</span>
+          </div>
           <span>{liveOpponentScore}</span>
         </div>
       )}
