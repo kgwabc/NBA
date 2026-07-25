@@ -41,6 +41,8 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
     teamSlug: string;
     rarity: CardRarity;
     flavorText: string;
+    imageUrl: string;
+    position: CardPosition;
   }>({
     offRating: "",
     defRating: "",
@@ -48,6 +50,8 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
     teamSlug: "",
     rarity: "BRONZE",
     flavorText: "",
+    imageUrl: "",
+    position: "PG",
   });
   const [editSaving, setEditSaving] = useState(false);
   const [editMessage, setEditMessage] = useState<string | null>(null);
@@ -154,6 +158,8 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
       teamSlug: card.team_slug,
       rarity: card.rarity,
       flavorText: card.flavor_text ?? "",
+      imageUrl: card.image_url ?? "",
+      position: card.position,
     });
   }
 
@@ -172,6 +178,8 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
           teamSlug: editForm.teamSlug,
           rarity: editForm.rarity,
           flavorText: editForm.flavorText.trim() || null,
+          imageUrl: editForm.imageUrl.trim() || null,
+          position: editForm.position,
         }),
       });
       const data = await res.json();
@@ -292,6 +300,17 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
                   ))}
                 </select>
                 <select
+                  value={editForm.position}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, position: e.target.value as CardPosition }))}
+                  className="h-9 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                >
+                  {POSITIONS.map((pos) => (
+                    <option key={pos} value={pos}>
+                      {pos}
+                    </option>
+                  ))}
+                </select>
+                <select
                   value={editForm.rarity}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, rarity: e.target.value as CardRarity }))}
                   className="h-9 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
@@ -307,6 +326,13 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
                   placeholder="플레이버 텍스트"
                   value={editForm.flavorText}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, flavorText: e.target.value }))}
+                  className="h-9 w-48 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                />
+                <input
+                  type="text"
+                  placeholder="이미지 URL"
+                  value={editForm.imageUrl}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, imageUrl: e.target.value }))}
                   className="h-9 w-48 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
                 />
                 <button
