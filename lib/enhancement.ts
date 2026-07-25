@@ -1,14 +1,30 @@
 import { dbGet, dbRun, ensureUserCurrency, type Card, type CardRarity } from "./db";
-import { applyEnhancement, enhancementCost, enhancementSuccessChance, MAX_ENHANCEMENT_LEVEL } from "./enhancementRules";
+import {
+  applyEnhancement,
+  enhancementCost,
+  enhancementFailureOutcomeShares,
+  enhancementSuccessChance,
+  MAX_ENHANCEMENT_LEVEL,
+} from "./enhancementRules";
 
 export class EnhancementError extends Error {}
 
 type OwnedCardRow = Card & { user_card_owner: number; enhancement_level: number };
 
+export type EnhanceOutcome = "success" | "stay" | "downgrade" | "destroy";
+
+function rollFailureOutcome(level: number): "stay" | "downgrade" | "destroy" {
+  const shares = enhancementFailureOutcomeShares(level);
+  const roll = Math.random();
+  if (roll < shares.stay) return "stay";
+  if (roll < shares.stay + shares.downgrade) return "downgrade";
+  return "destroy";
+}
+
 export async function enhanceCard(
   userId: number,
   userCardId: number
-): Promise<{ success: boolean; newLevel: number; cost: number; card: Card }> {
+): Promise<{ outcome: EnhanceOutcome; newLevel: number | null; cost: number; card: Card | null }> {
   const row = await dbGet<OwnedCardRow>(
     `SELECT c.*, uc.user_id AS user_card_owner, uc.enhancement_level AS enhancement_level
      FROM user_cards uc
@@ -38,8 +54,19 @@ export async function enhanceCard(
   ]);
 
   const success = Math.random() < enhancementSuccessChance(currentLevel);
-  const newLevel = success ? currentLevel + 1 : Math.max(0, currentLevel - 1);
-  await dbRun("UPDATE user_cards SET enhancement_level = ? WHERE id = ?", [newLevel, userCardId]);
+  if (success) {
+    const newLevel = currentLevel + 1;
+    await dbRun("UPDATE user_cards SET enhancement_level = ? WHERE id = ?", [newLevel, userCardId]);
+    return { outcome: "success", newLevel, cost, card: applyEnhancement(row, newLevel) };
+  }
 
-  return { success, newLevel, cost, card: applyEnhancement(row, newLevel) };
+  const outcome = rollFailureOutcome(currentLevel);
+  if (outcome === "destroy") {
+    await dbRun("DELETE FROM user_cards WHERE id = ?", [userCardId]);
+    return { outcome, newLevel: null, cost, card: null };
+  }
+
+  const newLevel = outcome === "downgrade" ? Math.max(0, currentLevel - 1) : currentLevel;
+  await dbRun("UPDATE user_cards SET enhancement_level = ? WHERE id = ?", [newLevel, userCardId]);
+  return { outcome, newLevel, cost, card: applyEnhancement(row, newLevel) };
 }

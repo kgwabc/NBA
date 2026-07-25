@@ -85,7 +85,11 @@ export default function CollectionGrid() {
         <CardEnhancer
           card={enhancing}
           onClose={() => setEnhancing(null)}
-          onEnhanced={({ newLevel, card: updatedCard }) => {
+          onEnhanced={({ outcome, newLevel, card: updatedCard }) => {
+            if (outcome === "destroy" || !updatedCard || newLevel === null) {
+              setCards((prev) => prev.filter((c) => c.id !== enhancing.id));
+              return;
+            }
             setCards((prev) =>
               prev.map((c) => (c.id === updatedCard.id ? { ...c, ...updatedCard, enhancement_level: newLevel } : c))
             );
