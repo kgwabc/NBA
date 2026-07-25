@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 
 const NAV_LINKS = [
@@ -26,7 +27,12 @@ export default async function GameLayout({ children }: { children: React.ReactNo
           <Link href="/" className="text-sm text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-50">
             ← 홈
           </Link>
-          <h1 className="text-lg font-semibold text-black dark:text-zinc-50 sm:text-xl">🎴 카드 가챠</h1>
+          <h1 className="flex items-center gap-2 text-lg font-semibold text-black dark:text-zinc-50 sm:text-xl">
+            <span className="relative inline-block h-6 w-6 shrink-0 overflow-hidden rounded">
+              <Image src="/game/pack-back.png" alt="" fill className="object-cover" />
+            </span>
+            카드 가챠
+          </h1>
         </div>
         <nav className="flex flex-wrap gap-2">
           {NAV_LINKS.map((link) => (

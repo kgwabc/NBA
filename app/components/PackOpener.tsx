@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import CardComponent from "@/app/components/CardComponent";
 import type { Card, CardRarity } from "@/lib/db";
 
@@ -188,9 +189,9 @@ export default function PackOpener() {
               className={`card-flip-inner ${FLIP_SPEED_CLASS[pulledCard.packType]} ${flipped ? "is-flipped" : ""}`}
             >
               <div
-                className={`card-face flex items-center justify-center rounded-2xl text-5xl transition-transform hover:scale-105 ${PACK_FACE_CLASS[pulledCard.packType]}`}
+                className={`card-face relative flex items-center justify-center overflow-hidden rounded-2xl transition-transform hover:scale-105 ${PACK_FACE_CLASS[pulledCard.packType]}`}
               >
-                🎴
+                <Image src="/game/pack-back.png" alt="카드팩 뒷면" fill className="object-cover" />
               </div>
               <div className={`card-face card-face-back ${flipped ? SHAKE_CLASS[pulledCard.rarity] ?? "" : ""}`}>
                 <CardComponent card={pulledCard.card} />
