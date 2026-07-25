@@ -9,7 +9,7 @@ type PackType = "free" | "basic" | "premium" | "legend";
 type GachaStatus = {
   balance: number;
   nextFreePackAt: number | null;
-  packTypes: Record<PackType, { cost: number }>;
+  packTypes: Record<PackType, { cost: number; dropRates: Record<CardRarity, number> }>;
 };
 
 const PACK_LABELS: Record<PackType, string> = {
@@ -18,6 +18,18 @@ const PACK_LABELS: Record<PackType, string> = {
   premium: "프리미엄 팩",
   legend: "레전드 팩",
 };
+
+const RARITY_LABELS_SHORT: Record<CardRarity, string> = {
+  BRONZE: "브론즈",
+  SILVER: "실버",
+  GOLD: "골드",
+  LEGEND: "레전드",
+};
+const RARITY_ORDER: CardRarity[] = ["BRONZE", "SILVER", "GOLD", "LEGEND"];
+
+function formatDropRates(dropRates: Record<CardRarity, number>): string {
+  return RARITY_ORDER.map((r) => `${RARITY_LABELS_SHORT[r]} ${Math.round(dropRates[r] * 100)}%`).join(" · ");
+}
 
 const SHAKE_CLASS: Partial<Record<CardRarity, string>> = {
   GOLD: "card-shake-gold",
@@ -128,6 +140,7 @@ export default function PackOpener() {
       <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
         {(Object.keys(PACK_LABELS) as PackType[]).map((packType) => {
           const cost = status?.packTypes[packType]?.cost ?? 0;
+          const dropRates = status?.packTypes[packType]?.dropRates;
           const disabled =
             opening !== null || (packType === "free" && !freeAvailable) || (status ? status.balance < cost : false);
           return (
@@ -148,6 +161,11 @@ export default function PackOpener() {
                     : formatCountdown(freeCooldownRemaining)
                   : `${cost} 재화`}
               </span>
+              {dropRates && (
+                <span className="text-center text-[10px] leading-tight text-zinc-400 dark:text-zinc-500">
+                  {formatDropRates(dropRates)}
+                </span>
+              )}
             </button>
           );
         })}
