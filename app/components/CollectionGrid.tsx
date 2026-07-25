@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import CardComponent from "@/app/components/CardComponent";
+import CardEnhancer from "@/app/components/CardEnhancer";
 import type { Card } from "@/lib/db";
 
-type CollectionEntry = Card & { owned_count: number };
+type CollectionEntry = Card & { owned_count: number; sample_user_card_id: number; enhancement_level: number };
 
 const RARITY_FILTERS: Array<Card["rarity"] | "전체"> = ["전체", "BRONZE", "SILVER", "GOLD", "LEGEND"];
 
@@ -13,6 +14,7 @@ export default function CollectionGrid() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [rarity, setRarity] = useState<Card["rarity"] | "전체">("전체");
+  const [enhancing, setEnhancing] = useState<CollectionEntry | null>(null);
 
   function load() {
     setLoading(true);
@@ -73,10 +75,23 @@ export default function CollectionGrid() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {filteredCards.map((card) => (
             <div key={card.id} className="flex flex-col gap-2">
-              <CardComponent card={card} />
+              <CardComponent card={card} enhancementLevel={card.enhancement_level} onClick={() => setEnhancing(card)} />
             </div>
           ))}
         </div>
+      )}
+
+      {enhancing && (
+        <CardEnhancer
+          card={enhancing}
+          onClose={() => setEnhancing(null)}
+          onEnhanced={({ newLevel, card: updatedCard }) => {
+            setCards((prev) =>
+              prev.map((c) => (c.id === updatedCard.id ? { ...c, ...updatedCard, enhancement_level: newLevel } : c))
+            );
+            setEnhancing((prev) => (prev ? { ...prev, ...updatedCard, enhancement_level: newLevel } : prev));
+          }}
+        />
       )}
     </div>
   );

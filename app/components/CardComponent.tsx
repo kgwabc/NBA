@@ -40,9 +40,10 @@ export type CardComponentProps = {
   selected?: boolean;
   onClick?: () => void;
   hideFlavorText?: boolean;
+  enhancementLevel?: number;
 };
 
-export default function CardComponent({ card, selected, onClick, hideFlavorText }: CardComponentProps) {
+export default function CardComponent({ card, selected, onClick, hideFlavorText, enhancementLevel }: CardComponentProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const showPhoto = !!card.image_url && !imageFailed;
 
@@ -79,6 +80,12 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText 
         <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
           {card.position}
         </span>
+
+        {!!enhancementLevel && enhancementLevel > 0 && (
+          <span className="absolute left-2 top-2 rounded-full bg-amber-500/90 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+            +{enhancementLevel}
+          </span>
+        )}
 
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-2 pt-8">
           <p className="text-base font-bold text-white drop-shadow-md">{card.name}</p>

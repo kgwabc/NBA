@@ -120,6 +120,7 @@ function ensureReady(): Promise<void> {
       await ensureColumn("cards", "image_url", "image_url TEXT");
       await ensureColumn("users", "favorite_team_slug", "favorite_team_slug TEXT");
       await ensureColumnDropped("cards", "synergy_tags");
+      await ensureColumn("user_cards", "enhancement_level", "enhancement_level INTEGER NOT NULL DEFAULT 0");
     })();
   }
   return global.__dbInit;
@@ -197,6 +198,7 @@ export type UserCard = {
   user_id: number;
   card_id: number;
   acquired_via: "pack" | "fusion" | "admin";
+  enhancement_level: number;
   created_at: string;
 };
 

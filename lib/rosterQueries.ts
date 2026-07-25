@@ -1,4 +1,5 @@
 import { dbAll, dbGet, dbRun, type Card, type CardPosition } from "./db";
+import { applyEnhancement } from "./enhancementRules";
 import { validateRoster } from "./rosterValidation";
 
 export type RosterSlotWithCard = {
@@ -11,8 +12,8 @@ export type RosterSlotWithCard = {
 // (e.g. burned in a fusion) simply drops out instead of erroring — the position just
 // reads as empty until the player picks a replacement.
 export async function loadRosterForUser(userId: number): Promise<RosterSlotWithCard[]> {
-  const rows = await dbAll<Card & { slot_position: string; user_card_id: number }>(
-    `SELECT rs.position AS slot_position, rs.user_card_id, c.*
+  const rows = await dbAll<Card & { slot_position: string; user_card_id: number; enhancement_level: number }>(
+    `SELECT rs.position AS slot_position, rs.user_card_id, uc.enhancement_level AS enhancement_level, c.*
      FROM roster_slots rs
      JOIN user_cards uc ON uc.id = rs.user_card_id AND uc.user_id = rs.user_id
      JOIN cards c ON c.id = uc.card_id
@@ -22,7 +23,7 @@ export async function loadRosterForUser(userId: number): Promise<RosterSlotWithC
   return rows.map((row) => ({
     position: row.slot_position as CardPosition,
     user_card_id: row.user_card_id,
-    card: row,
+    card: applyEnhancement(row, row.enhancement_level),
   }));
 }
 
