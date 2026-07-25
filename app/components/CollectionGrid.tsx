@@ -13,8 +13,6 @@ export default function CollectionGrid() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [rarity, setRarity] = useState<Card["rarity"] | "전체">("전체");
-  const [fusingId, setFusingId] = useState<number | null>(null);
-  const [fusionMessage, setFusionMessage] = useState<string | null>(null);
 
   function load() {
     setLoading(true);
@@ -41,27 +39,6 @@ export default function CollectionGrid() {
     if (rarity === "전체") return cards;
     return cards.filter((c) => c.rarity === rarity);
   }, [cards, rarity]);
-
-  async function handleFuse(cardId: number) {
-    setFusingId(cardId);
-    setFusionMessage(null);
-    try {
-      const res = await fetch("/api/game/fusion", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cardId }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setFusionMessage(data.error ?? "합성에 실패했습니다.");
-        return;
-      }
-      setFusionMessage(`${data.resultCard?.name ?? "새 카드"}(으)로 합성 성공!`);
-      load();
-    } finally {
-      setFusingId(null);
-    }
-  }
 
   if (loading) {
     return <p className="text-zinc-500 dark:text-zinc-400">컬렉션을 불러오는 중...</p>;
@@ -90,8 +67,6 @@ export default function CollectionGrid() {
         ))}
       </div>
 
-      {fusionMessage && <p className="text-sm text-orange-600 dark:text-orange-400">{fusionMessage}</p>}
-
       {filteredCards.length === 0 ? (
         <p className="text-center text-zinc-500 dark:text-zinc-400">보유한 카드가 없습니다. 팩을 열어보세요!</p>
       ) : (
@@ -99,16 +74,6 @@ export default function CollectionGrid() {
           {filteredCards.map((card) => (
             <div key={card.id} className="flex flex-col gap-2">
               <CardComponent card={card} ownedCount={card.owned_count} />
-              {card.rarity === "BRONZE" && card.owned_count >= 3 && (
-                <button
-                  type="button"
-                  onClick={() => handleFuse(card.id)}
-                  disabled={fusingId === card.id}
-                  className="rounded-full bg-orange-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-orange-500 disabled:opacity-50"
-                >
-                  {fusingId === card.id ? "합성 중..." : "3장 합성하기"}
-                </button>
-              )}
             </div>
           ))}
         </div>
