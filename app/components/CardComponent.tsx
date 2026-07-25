@@ -29,7 +29,7 @@ const PLACEHOLDER_GRADIENT: Record<Card["rarity"], string> = {
 const IMAGE_POSITION_OVERRIDES: Record<string, string> = {
   // 원본 사진(3941x2382, 가로로 매우 넓음)에서 커리가 중앙이 아닌 좌측 35~40% 지점에 있어
   // 기본 중앙 크롭으로는 잘려나갔다 — 실제 위치에 맞춰 가로 크롭 기준점만 조정.
-  "스테판 커리": "37% center",
+  "스테판 커리": "center",
 };
 
 export type CardComponentProps = {

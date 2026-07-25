@@ -25,7 +25,7 @@ export const cardSeeds: CardSeed[] = [
     salary: 45,
     synergyTags: ["WARRIORS"],
     flavorText: "역대급 3점슛 능력으로 '스몰볼' 시대를 연 워리어스의 에이스.",
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/40/Stephen_Curry_%2833140701266%29.jpg",
+    imageUrl: "/players/stephen-curry.png",
   },
   {
     name: "마이클 조던",
