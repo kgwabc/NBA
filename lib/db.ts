@@ -35,6 +35,16 @@ async function ensureColumn(table: string, column: string, ddl: string): Promise
   }
 }
 
+// Mirror of ensureColumn for dropping a retired column — safe to re-run since it checks
+// existence first (once dropped, later calls are a no-op).
+async function ensureColumnDropped(table: string, column: string): Promise<void> {
+  const info = await db.execute(`PRAGMA table_info(${table})`);
+  const exists = info.rows.some((row) => row.name === column);
+  if (exists) {
+    await db.execute(`ALTER TABLE ${table} DROP COLUMN ${column}`);
+  }
+}
+
 function ensureReady(): Promise<void> {
   if (!global.__dbInit) {
     global.__dbInit = (async () => {
@@ -64,7 +74,6 @@ function ensureReady(): Promise<void> {
           off_rating INTEGER NOT NULL,
           def_rating INTEGER NOT NULL,
           salary INTEGER NOT NULL,
-          synergy_tags TEXT NOT NULL DEFAULT '[]',
           flavor_text TEXT,
           created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
@@ -110,6 +119,7 @@ function ensureReady(): Promise<void> {
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_pack_openings_user ON pack_openings(user_id, created_at);`);
       await ensureColumn("cards", "image_url", "image_url TEXT");
       await ensureColumn("users", "favorite_team_slug", "favorite_team_slug TEXT");
+      await ensureColumnDropped("cards", "synergy_tags");
     })();
   }
   return global.__dbInit;
@@ -168,7 +178,6 @@ export type Card = {
   off_rating: number;
   def_rating: number;
   salary: number;
-  synergy_tags: string;
   flavor_text: string | null;
   image_url: string | null;
   created_at: string;

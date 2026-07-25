@@ -18,7 +18,6 @@ const NEW_CARD_DEFAULTS = {
   offRating: "70",
   defRating: "70",
   salary: "10",
-  synergyTags: "",
   flavorText: "",
   imageUrl: "",
 };
@@ -35,12 +34,20 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
   const [grantCardId, setGrantCardId] = useState<string>("");
 
   const [editCardId, setEditCardId] = useState<string>("");
-  const [editForm, setEditForm] = useState<{ offRating: string; defRating: string; salary: string; teamSlug: string; rarity: CardRarity }>({
+  const [editForm, setEditForm] = useState<{
+    offRating: string;
+    defRating: string;
+    salary: string;
+    teamSlug: string;
+    rarity: CardRarity;
+    flavorText: string;
+  }>({
     offRating: "",
     defRating: "",
     salary: "",
     teamSlug: "",
     rarity: "BRONZE",
+    flavorText: "",
   });
   const [editSaving, setEditSaving] = useState(false);
   const [editMessage, setEditMessage] = useState<string | null>(null);
@@ -146,6 +153,7 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
       salary: String(card.salary),
       teamSlug: card.team_slug,
       rarity: card.rarity,
+      flavorText: card.flavor_text ?? "",
     });
   }
 
@@ -163,6 +171,7 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
           salary: Number(editForm.salary),
           teamSlug: editForm.teamSlug,
           rarity: editForm.rarity,
+          flavorText: editForm.flavorText.trim() || null,
         }),
       });
       const data = await res.json();
@@ -196,10 +205,6 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
           offRating: Number(newCardForm.offRating),
           defRating: Number(newCardForm.defRating),
           salary: Number(newCardForm.salary),
-          synergyTags: newCardForm.synergyTags
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter(Boolean),
           flavorText: newCardForm.flavorText.trim() || null,
           imageUrl: newCardForm.imageUrl.trim() || null,
         }),
@@ -297,6 +302,13 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
                     </option>
                   ))}
                 </select>
+                <input
+                  type="text"
+                  placeholder="플레이버 텍스트"
+                  value={editForm.flavorText}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, flavorText: e.target.value }))}
+                  className="h-9 w-48 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
+                />
                 <button
                   onClick={handleSaveCardEdit}
                   disabled={editSaving}
@@ -380,13 +392,6 @@ export default function AdminGamePanel({ onClose }: { onClose: () => void }) {
                 className="h-9 w-16 rounded-full border border-black/[.08] bg-white px-2 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
               />
             </label>
-            <input
-              type="text"
-              placeholder="시너지 태그 (쉼표로 구분)"
-              value={newCardForm.synergyTags}
-              onChange={(e) => setNewCardForm((prev) => ({ ...prev, synergyTags: e.target.value }))}
-              className="h-9 w-40 rounded-full border border-black/[.08] bg-white px-3 text-xs text-black outline-none dark:border-white/[.145] dark:bg-black dark:text-zinc-50"
-            />
             <input
               type="text"
               placeholder="플레이버 텍스트"

@@ -19,8 +19,8 @@ async function main() {
       continue;
     }
     await dbRun(
-      `INSERT INTO cards (name, team_slug, position, rarity, off_rating, def_rating, salary, synergy_tags, flavor_text, image_url)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO cards (name, team_slug, position, rarity, off_rating, def_rating, salary, flavor_text, image_url)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         card.name,
         card.teamSlug,
@@ -29,7 +29,6 @@ async function main() {
         card.off,
         card.def,
         card.salary,
-        JSON.stringify(card.synergyTags),
         card.flavorText,
         card.imageUrl ?? null,
       ]

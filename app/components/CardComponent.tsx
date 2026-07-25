@@ -35,7 +35,7 @@ const IMAGE_POSITION_OVERRIDES: Record<string, string> = {
 export type CardComponentProps = {
   card: Pick<
     Card,
-    "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url"
+    "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url" | "flavor_text"
   >;
   ownedCount?: number;
   selected?: boolean;
@@ -93,6 +93,10 @@ export default function CardComponent({ card, ownedCount, selected, onClick }: C
         <span>DEF {card.def_rating}</span>
         <span>${card.salary}M</span>
       </div>
+
+      {card.flavor_text && (
+        <p className="line-clamp-2 px-3 pb-2.5 text-xs italic text-zinc-500 dark:text-zinc-400">{card.flavor_text}</p>
+      )}
 
       {typeof ownedCount === "number" && (
         <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">

@@ -20,6 +20,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const salary = body?.salary;
   const teamSlug = body?.teamSlug;
   const rarity = body?.rarity;
+  const flavorText = body?.flavorText;
 
   if (offRating !== undefined && (!Number.isInteger(offRating) || offRating < 0 || offRating > 99)) {
     return NextResponse.json({ error: "OFF는 0~99 사이의 정수여야 합니다." }, { status: 400 });
@@ -36,6 +37,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   if (rarity !== undefined && !VALID_RARITIES.includes(rarity)) {
     return NextResponse.json({ error: "잘못된 등급입니다." }, { status: 400 });
   }
+  if (flavorText !== undefined && flavorText !== null && typeof flavorText !== "string") {
+    return NextResponse.json({ error: "플레이버 텍스트 형식이 잘못되었습니다." }, { status: 400 });
+  }
 
   const updated: Card = {
     ...existing,
@@ -44,11 +48,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     salary: salary ?? existing.salary,
     team_slug: teamSlug ?? existing.team_slug,
     rarity: rarity ?? existing.rarity,
+    flavor_text: flavorText !== undefined ? flavorText : existing.flavor_text,
   };
 
   await dbRun(
-    "UPDATE cards SET off_rating = ?, def_rating = ?, salary = ?, team_slug = ?, rarity = ? WHERE id = ?",
-    [updated.off_rating, updated.def_rating, updated.salary, updated.team_slug, updated.rarity, cardId]
+    "UPDATE cards SET off_rating = ?, def_rating = ?, salary = ?, team_slug = ?, rarity = ?, flavor_text = ? WHERE id = ?",
+    [updated.off_rating, updated.def_rating, updated.salary, updated.team_slug, updated.rarity, updated.flavor_text, cardId]
   );
 
   return NextResponse.json({ card: updated });

@@ -36,7 +36,10 @@ type RosterResponse = { slots: { position: CardPosition; card: Card }[] };
 
 // The shape CardComponent needs — my roster cards already satisfy this; bot "cards" are
 // synthesized below since bots aren't real Card rows.
-type DisplayCard = Pick<Card, "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url">;
+type DisplayCard = Pick<
+  Card,
+  "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url" | "flavor_text"
+>;
 
 const BOT_LABELS: Record<BotDeckId, string> = {
   easybot: "이지봇",
@@ -70,6 +73,7 @@ function botLineupToDisplayCards(players: LineupPlayer[], bot: BotDeckId): Displ
     def_rating: p.defRating,
     salary: 0,
     image_url: null,
+    flavor_text: null,
   }));
 }
 

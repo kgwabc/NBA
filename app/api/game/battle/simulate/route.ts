@@ -47,7 +47,6 @@ export async function POST(request: NextRequest) {
     teamSlug: s.card.team_slug,
     offRating: s.card.off_rating,
     defRating: s.card.def_rating,
-    synergyTags: JSON.parse(s.card.synergy_tags) as string[],
     playerKey: s.card.name,
   }));
 
@@ -56,7 +55,6 @@ export async function POST(request: NextRequest) {
     teamSlug: c.teamSlug,
     offRating: c.offRating,
     defRating: c.defRating,
-    synergyTags: c.synergyTags,
     playerKey: c.name,
   }));
 

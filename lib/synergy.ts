@@ -5,7 +5,6 @@ export type DeckCard = {
   teamSlug: string;
   offRating: number;
   defRating: number;
-  synergyTags: string[];
   playerKey: string;
 };
 

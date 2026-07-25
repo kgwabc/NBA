@@ -26,7 +26,6 @@ export async function POST(request: NextRequest) {
   const offRating = body?.offRating;
   const defRating = body?.defRating;
   const salary = body?.salary;
-  const synergyTags = body?.synergyTags;
   const flavorText = body?.flavorText ?? null;
   const imageUrl = body?.imageUrl ?? null;
 
@@ -51,10 +50,6 @@ export async function POST(request: NextRequest) {
   if (!Number.isInteger(salary) || salary < 0) {
     return NextResponse.json({ error: "연봉은 0 이상의 정수여야 합니다." }, { status: 400 });
   }
-  if (synergyTags !== undefined && !Array.isArray(synergyTags)) {
-    return NextResponse.json({ error: "시너지 태그 형식이 잘못되었습니다." }, { status: 400 });
-  }
-
   const trimmedName = name.trim();
   const existing = await dbGet<{ id: number }>("SELECT id FROM cards WHERE name = ?", [trimmedName]);
   if (existing) {
@@ -62,20 +57,9 @@ export async function POST(request: NextRequest) {
   }
 
   const { lastInsertRowid } = await dbRun(
-    `INSERT INTO cards (name, team_slug, position, rarity, off_rating, def_rating, salary, synergy_tags, flavor_text, image_url)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      trimmedName,
-      teamSlug,
-      position,
-      rarity,
-      offRating,
-      defRating,
-      salary,
-      JSON.stringify(synergyTags ?? []),
-      flavorText,
-      imageUrl,
-    ]
+    `INSERT INTO cards (name, team_slug, position, rarity, off_rating, def_rating, salary, flavor_text, image_url)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [trimmedName, teamSlug, position, rarity, offRating, defRating, salary, flavorText, imageUrl]
   );
 
   const card = await dbGet<Card>("SELECT * FROM cards WHERE id = ?", [lastInsertRowid]);
