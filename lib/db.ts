@@ -97,23 +97,9 @@ function ensureReady(): Promise<void> {
           created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
       `);
-      await db.execute(`
-        CREATE TABLE IF NOT EXISTS arcade_matches (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          user_id INTEGER NOT NULL REFERENCES users(id),
-          mode TEXT NOT NULL,
-          home_card_ids TEXT NOT NULL,
-          away_card_ids TEXT NOT NULL,
-          home_score INTEGER NOT NULL,
-          away_score INTEGER NOT NULL,
-          result TEXT NOT NULL,
-          created_at TEXT NOT NULL DEFAULT (datetime('now'))
-        );
-      `);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_user_cards_user ON user_cards(user_id);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_user_cards_card ON user_cards(card_id);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_pack_openings_user ON pack_openings(user_id, created_at);`);
-      await db.execute(`CREATE INDEX IF NOT EXISTS idx_arcade_matches_user ON arcade_matches(user_id, created_at);`);
       await ensureColumn("cards", "image_url", "image_url TEXT");
       await ensureColumn("users", "favorite_team_slug", "favorite_team_slug TEXT");
     })();
@@ -205,17 +191,3 @@ export type PackOpening = {
   created_at: string;
 };
 
-export type ArcadeMatchMode = "vs_ai" | "local_2p";
-export type ArcadeMatchResult = "win" | "loss" | "draw" | "p1_win" | "p2_win";
-
-export type ArcadeMatchRow = {
-  id: number;
-  user_id: number;
-  mode: ArcadeMatchMode;
-  home_card_ids: string;
-  away_card_ids: string;
-  home_score: number;
-  away_score: number;
-  result: ArcadeMatchResult;
-  created_at: string;
-};
