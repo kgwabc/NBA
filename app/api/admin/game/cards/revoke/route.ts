@@ -17,6 +17,9 @@ export async function POST(request: NextRequest) {
   );
   if (!owned) return NextResponse.json({ error: "해당 유저가 그 카드를 보유하고 있지 않습니다." }, { status: 400 });
 
+  // A card sitting in the user's roster is referenced by roster_slots.user_card_id
+  // (FK-enforced by Turso), so that reference has to go first or the delete below fails.
+  await dbRun("DELETE FROM roster_slots WHERE user_card_id = ?", [owned.id]);
   await dbRun("DELETE FROM user_cards WHERE id = ?", [owned.id]);
 
   return NextResponse.json({ success: true });
