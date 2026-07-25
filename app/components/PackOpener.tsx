@@ -24,6 +24,25 @@ const SHAKE_CLASS: Partial<Record<CardRarity, string>> = {
   LEGEND: "card-shake-legend",
 };
 
+// Pricier packs get a flashier closed-pack look and a slower, punchier flip.
+const FLIP_SPEED_CLASS: Record<PackType, string> = {
+  free: "flip-speed-free",
+  basic: "flip-speed-basic",
+  premium: "flip-speed-premium",
+  legend: "flip-speed-legend",
+};
+const PACK_FACE_CLASS: Record<PackType, string> = {
+  free: "pack-face-free",
+  basic: "pack-face-basic",
+  premium: "pack-face-premium",
+  legend: "pack-face-legend",
+};
+const PACK_TILE_CLASS: Partial<Record<PackType, string>> = {
+  basic: "pack-tile-basic",
+  premium: "pack-tile-premium",
+  legend: "pack-tile-legend",
+};
+
 function formatCountdown(ms: number) {
   const totalSeconds = Math.max(0, Math.floor(ms / 1000));
   const hours = Math.floor(totalSeconds / 3600);
@@ -42,6 +61,7 @@ export default function PackOpener() {
     rarity: CardRarity;
     duplicate: boolean;
     currencyAwarded: number;
+    packType: PackType;
   } | null>(null);
   const [flipped, setFlipped] = useState(false);
 
@@ -78,6 +98,7 @@ export default function PackOpener() {
         rarity: data.rarity,
         duplicate: data.duplicate,
         currencyAwarded: data.currencyAwarded,
+        packType,
       });
       loadStatus();
     } finally {
@@ -115,7 +136,9 @@ export default function PackOpener() {
               type="button"
               disabled={disabled}
               onClick={() => handleOpen(packType)}
-              className="flex flex-col items-center gap-1 rounded-lg border border-black/[.08] bg-white p-4 text-sm font-medium text-black transition-colors hover:border-black/40 disabled:opacity-40 dark:border-white/[.145] dark:bg-zinc-900 dark:text-zinc-50"
+              className={`flex flex-col items-center gap-1 rounded-lg border border-black/[.08] bg-white p-4 text-sm font-medium text-black transition-colors hover:border-black/40 disabled:opacity-40 dark:border-white/[.145] dark:bg-zinc-900 dark:text-zinc-50 ${
+                PACK_TILE_CLASS[packType] ?? ""
+              }`}
             >
               <span>{PACK_LABELS[packType]}</span>
               <span className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -143,8 +166,12 @@ export default function PackOpener() {
               if (!flipped && (e.key === "Enter" || e.key === " ")) handleReveal();
             }}
           >
-            <div className={`card-flip-inner ${flipped ? "is-flipped" : ""}`}>
-              <div className="card-face flex items-center justify-center rounded-2xl bg-zinc-800 text-5xl transition-transform hover:scale-105">
+            <div
+              className={`card-flip-inner ${FLIP_SPEED_CLASS[pulledCard.packType]} ${flipped ? "is-flipped" : ""}`}
+            >
+              <div
+                className={`card-face flex items-center justify-center rounded-2xl text-5xl transition-transform hover:scale-105 ${PACK_FACE_CLASS[pulledCard.packType]}`}
+              >
                 🎴
               </div>
               <div className={`card-face card-face-back ${flipped ? SHAKE_CLASS[pulledCard.rarity] ?? "" : ""}`}>
