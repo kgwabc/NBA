@@ -62,6 +62,10 @@ export async function enhanceCard(
 
   const outcome = rollFailureOutcome(currentLevel);
   if (outcome === "destroy") {
+    // Clear any roster slot pointing at this card first — user_cards has no ON DELETE
+    // clause for roster_slots.user_card_id, so deleting an equipped card without this
+    // would violate the foreign key and silently fail the whole request.
+    await dbRun("DELETE FROM roster_slots WHERE user_card_id = ?", [userCardId]);
     await dbRun("DELETE FROM user_cards WHERE id = ?", [userCardId]);
     return { outcome, newLevel: null, cost, card: null };
   }

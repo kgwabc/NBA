@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
     if (err instanceof EnhancementError) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
-    throw err;
+    console.error(err);
+    return NextResponse.json({ error: "강화 중 오류가 발생했습니다." }, { status: 500 });
   }
 }

@@ -60,6 +60,8 @@ export default function CardEnhancer({ card, onClose, onEnhanced }: Props) {
       setResult({ outcome: data.outcome, newLevel: data.newLevel });
       loadBalance();
       onEnhanced({ outcome: data.outcome, newLevel: data.newLevel, card: data.card });
+    } catch {
+      setError("강화 중 오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setBusy(false);
     }
