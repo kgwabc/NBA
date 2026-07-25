@@ -76,10 +76,6 @@ export default function CardComponent({ card, ownedCount, selected, onClick }: C
           </div>
         )}
 
-        {(card.rarity === "GOLD" || card.rarity === "LEGEND") && (
-          <div className="card-shine pointer-events-none absolute inset-0" />
-        )}
-
         <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
           {card.position}
         </span>
