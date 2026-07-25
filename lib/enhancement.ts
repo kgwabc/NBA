@@ -64,8 +64,11 @@ export async function enhanceCard(
   if (outcome === "destroy") {
     // Clear any roster slot pointing at this card first — user_cards has no ON DELETE
     // clause for roster_slots.user_card_id, so deleting an equipped card without this
-    // would violate the foreign key and silently fail the whole request.
+    // would violate the foreign key and silently fail the whole request. deck_slots is
+    // a retired table from the old deck feature that never got dropped — leftover rows
+    // there carry the same kind of FK and block the delete just as silently.
     await dbRun("DELETE FROM roster_slots WHERE user_card_id = ?", [userCardId]);
+    await dbRun("DELETE FROM deck_slots WHERE user_card_id = ?", [userCardId]);
     await dbRun("DELETE FROM user_cards WHERE id = ?", [userCardId]);
     return { outcome, newLevel: null, cost, card: null };
   }

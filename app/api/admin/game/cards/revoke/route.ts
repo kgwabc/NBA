@@ -19,7 +19,10 @@ export async function POST(request: NextRequest) {
 
   // A card sitting in the user's roster is referenced by roster_slots.user_card_id
   // (FK-enforced by Turso), so that reference has to go first or the delete below fails.
+  // deck_slots is a retired table from the old deck feature that never got dropped —
+  // leftover rows there hold the same kind of FK and block the delete just as silently.
   await dbRun("DELETE FROM roster_slots WHERE user_card_id = ?", [owned.id]);
+  await dbRun("DELETE FROM deck_slots WHERE user_card_id = ?", [owned.id]);
   await dbRun("DELETE FROM user_cards WHERE id = ?", [owned.id]);
 
   return NextResponse.json({ success: true });
