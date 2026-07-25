@@ -6,6 +6,7 @@ export type RosterSlotWithCard = {
   position: CardPosition;
   user_card_id: number;
   card: Card;
+  enhancement_level: number;
 };
 
 // Inner-joins through user_cards so a slot pointing at a card the user no longer owns
@@ -24,6 +25,7 @@ export async function loadRosterForUser(userId: number): Promise<RosterSlotWithC
     position: row.slot_position as CardPosition,
     user_card_id: row.user_card_id,
     card: applyEnhancement(row, row.enhancement_level),
+    enhancement_level: row.enhancement_level,
   }));
 }
 

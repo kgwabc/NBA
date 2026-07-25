@@ -5,7 +5,7 @@ import CardComponent from "@/app/components/CardComponent";
 import type { Card, CardPosition } from "@/lib/db";
 import { REQUIRED_POSITIONS, ROSTER_SALARY_CAP, validateRoster } from "@/lib/rosterValidation";
 
-type CollectionEntry = Card & { owned_count: number; sample_user_card_id: number };
+type CollectionEntry = Card & { owned_count: number; sample_user_card_id: number; enhancement_level: number };
 
 type SlotState = { position: CardPosition; card: CollectionEntry } | null;
 
@@ -95,7 +95,12 @@ export default function RosterBuilder() {
               <div key={pos} className="flex flex-col gap-1">
                 <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{pos}</span>
                 {slot ? (
-                  <CardComponent card={slot.card} onClick={() => setPickerPosition(pos)} selected />
+                  <CardComponent
+                    card={slot.card}
+                    onClick={() => setPickerPosition(pos)}
+                    selected
+                    enhancementLevel={slot.card.enhancement_level}
+                  />
                 ) : (
                   <button
                     type="button"
@@ -159,7 +164,12 @@ export default function RosterBuilder() {
               {collection
                 .filter((c) => c.position === pickerPosition)
                 .map((card) => (
-                  <CardComponent key={card.id} card={card} onClick={() => selectCard(pickerPosition, card)} />
+                  <CardComponent
+                    key={card.id}
+                    card={card}
+                    onClick={() => selectCard(pickerPosition, card)}
+                    enhancementLevel={card.enhancement_level}
+                  />
                 ))}
             </div>
             {collection.filter((c) => c.position === pickerPosition).length === 0 && (

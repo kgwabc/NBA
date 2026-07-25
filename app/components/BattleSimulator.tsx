@@ -32,14 +32,14 @@ type BattleResponse = {
   error?: string;
 };
 
-type RosterResponse = { slots: { position: CardPosition; card: Card }[] };
+type RosterResponse = { slots: { position: CardPosition; card: Card; enhancement_level: number }[] };
 
 // The shape CardComponent needs — my roster cards already satisfy this; bot "cards" are
 // synthesized below since bots aren't real Card rows.
 type DisplayCard = Pick<
   Card,
   "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url" | "flavor_text"
->;
+> & { enhancementLevel?: number };
 
 const BOT_LABELS: Record<BotDeckId, string> = {
   easybot: "이지봇",
@@ -103,7 +103,7 @@ function LineupGrid({
           const key = isScoring ? `${card.name}-${lastScore.seq}` : card.name;
           return (
             <div key={key} className={`relative ${isScoring ? "score-ring-pulse" : ""}`}>
-              <CardComponent card={card} hideFlavorText />
+              <CardComponent card={card} hideFlavorText enhancementLevel={card.enhancementLevel} />
               {isScoring && (
                 <span className="score-popup pointer-events-none absolute left-1/2 top-1/3 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-orange-500 px-3 py-1 text-sm font-black text-white shadow-lg">
                   +{lastScore.points} 득점!
@@ -178,7 +178,7 @@ export default function BattleSimulator() {
     fetch("/api/game/roster")
       .then((res) => res.json())
       .then((data: RosterResponse) => {
-        setMyCards((data.slots ?? []).map((s) => s.card));
+        setMyCards((data.slots ?? []).map((s) => ({ ...s.card, enhancementLevel: s.enhancement_level })));
       });
   }, []);
 
