@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { CardPosition } from "@/lib/db";
+import CardComponent from "@/app/components/CardComponent";
+import type { Card, CardPosition, CardRarity } from "@/lib/db";
 
 type BotDeckId = "easybot" | "allstarbot" | "legendbot";
 
@@ -31,7 +32,11 @@ type BattleResponse = {
   error?: string;
 };
 
-type RosterResponse = { slots: { position: CardPosition; card: { name: string; off_rating: number; def_rating: number } }[] };
+type RosterResponse = { slots: { position: CardPosition; card: Card }[] };
+
+// The shape CardComponent needs — my roster cards already satisfy this; bot "cards" are
+// synthesized below since bots aren't real Card rows.
+type DisplayCard = Pick<Card, "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url">;
 
 const BOT_LABELS: Record<BotDeckId, string> = {
   easybot: "이지봇",
@@ -39,31 +44,71 @@ const BOT_LABELS: Record<BotDeckId, string> = {
   legendbot: "레전드봇",
 };
 
+// Difficulty tiers borrow the existing rarity styling (border/glow) so the three bot
+// levels read as visually distinct at a glance, same as real card rarities.
+const BOT_RARITY: Record<BotDeckId, CardRarity> = {
+  easybot: "BRONZE",
+  allstarbot: "GOLD",
+  legendbot: "LEGEND",
+};
+
 const POSITION_ORDER: CardPosition[] = ["PG", "SG", "SF", "PF", "C"];
 
-const EVENT_DELAY_MS = 350;
+const EVENT_DELAY_MS = 550;
 
 function sortByPosition<T extends { position: CardPosition }>(players: T[]): T[] {
   return [...players].sort((a, b) => POSITION_ORDER.indexOf(a.position) - POSITION_ORDER.indexOf(b.position));
 }
 
-function LineupPanel({ title, players }: { title: string; players: LineupPlayer[] }) {
+function botLineupToDisplayCards(players: LineupPlayer[], bot: BotDeckId): DisplayCard[] {
+  return players.map((p) => ({
+    name: p.name,
+    team_slug: BOT_LABELS[bot],
+    position: p.position,
+    rarity: BOT_RARITY[bot],
+    off_rating: p.offRating,
+    def_rating: p.defRating,
+    salary: 0,
+    image_url: null,
+  }));
+}
+
+type LastScore = { team: "user" | "opponent"; name: string; points: 2 | 3; seq: number };
+
+function LineupGrid({
+  title,
+  cards,
+  team,
+  lastScore,
+}: {
+  title: string;
+  cards: DisplayCard[];
+  team: "user" | "opponent";
+  lastScore: LastScore | null;
+}) {
+  if (cards.length === 0) return null;
   return (
-    <div className="flex flex-1 flex-col gap-2 rounded-lg border border-black/[.08] p-3 dark:border-white/[.145]">
+    <div className="flex flex-col gap-2">
       <h3 className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{title}</h3>
-      <ul className="flex flex-col gap-1">
-        {sortByPosition(players).map((p) => (
-          <li key={p.name} className="flex items-center justify-between text-sm text-black dark:text-zinc-50">
-            <span className="flex items-center gap-2">
-              <span className="w-7 text-[10px] font-semibold text-zinc-400">{p.position}</span>
-              {p.name}
-            </span>
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
-              OFF {p.offRating} / DEF {p.defRating}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {sortByPosition(cards).map((card) => {
+          const isScoring = lastScore?.team === team && lastScore.name === card.name;
+          // Re-keying on the score's seq (instead of just the card name) forces this
+          // wrapper to remount when the same player scores again back-to-back, so the
+          // one-shot ring/popup animations replay from the start each time.
+          const key = isScoring ? `${card.name}-${lastScore.seq}` : card.name;
+          return (
+            <div key={key} className={`relative ${isScoring ? "score-ring-pulse" : ""}`}>
+              <CardComponent card={card} />
+              {isScoring && (
+                <span className="score-popup pointer-events-none absolute left-1/2 top-1/3 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-orange-500 px-3 py-1 text-sm font-black text-white shadow-lg">
+                  +{lastScore.points} 득점!
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -112,28 +157,23 @@ function BoxScoreTable({ title, lines }: { title: string; lines: PlayerStatLine[
 }
 
 export default function BattleSimulator() {
-  const [myLineup, setMyLineup] = useState<LineupPlayer[]>([]);
-  const [opponentLineup, setOpponentLineup] = useState<LineupPlayer[]>([]);
+  const [myCards, setMyCards] = useState<DisplayCard[]>([]);
+  const [opponentCards, setOpponentCards] = useState<DisplayCard[]>([]);
   const [running, setRunning] = useState(false);
   const [visibleEvents, setVisibleEvents] = useState<ScoringEvent[]>([]);
   const [liveUserScore, setLiveUserScore] = useState(0);
   const [liveOpponentScore, setLiveOpponentScore] = useState(0);
+  const [lastScore, setLastScore] = useState<LastScore | null>(null);
   const [finalResult, setFinalResult] = useState<BattleResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scoreSeqRef = useRef(0);
 
   useEffect(() => {
     fetch("/api/game/roster")
       .then((res) => res.json())
       .then((data: RosterResponse) => {
-        setMyLineup(
-          (data.slots ?? []).map((s) => ({
-            name: s.card.name,
-            position: s.position,
-            offRating: s.card.off_rating,
-            defRating: s.card.def_rating,
-          }))
-        );
+        setMyCards((data.slots ?? []).map((s) => s.card));
       });
   }, []);
 
@@ -143,6 +183,7 @@ export default function BattleSimulator() {
     setVisibleEvents([]);
     setLiveUserScore(0);
     setLiveOpponentScore(0);
+    setLastScore(null);
     setRunning(true);
 
     const res = await fetch("/api/game/battle/simulate", {
@@ -156,7 +197,7 @@ export default function BattleSimulator() {
       setRunning(false);
       return;
     }
-    setOpponentLineup(data.opponentLineup);
+    setOpponentCards(botLineupToDisplayCards(data.opponentLineup, opponentBot));
 
     let index = 0;
     let userScore = 0;
@@ -165,6 +206,7 @@ export default function BattleSimulator() {
     function playNext() {
       if (index >= data.events.length) {
         setFinalResult(data);
+        setLastScore(null);
         setRunning(false);
         return;
       }
@@ -175,6 +217,8 @@ export default function BattleSimulator() {
       setVisibleEvents((prev) => [...prev, event]);
       setLiveUserScore(userScore);
       setLiveOpponentScore(opponentScore);
+      scoreSeqRef.current += 1;
+      setLastScore({ team: event.team, name: event.scorerName, points: event.points, seq: scoreSeqRef.current });
       index++;
       timeoutRef.current = setTimeout(playNext, EVENT_DELAY_MS);
     }
@@ -183,7 +227,7 @@ export default function BattleSimulator() {
   }
 
   return (
-    <div className="flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full max-w-4xl flex-col gap-6">
       <div className="grid grid-cols-3 gap-3">
         {(Object.keys(BOT_LABELS) as BotDeckId[]).map((bot) => (
           <button
@@ -200,10 +244,8 @@ export default function BattleSimulator() {
 
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <LineupPanel title="내 팀" players={myLineup} />
-        <LineupPanel title="상대 팀" players={opponentLineup} />
-      </div>
+      <LineupGrid title="내 팀" cards={myCards} team="user" lastScore={lastScore} />
+      <LineupGrid title="상대 팀" cards={opponentCards} team="opponent" lastScore={lastScore} />
 
       {(running || visibleEvents.length > 0) && (
         <div className="flex flex-col gap-3">
