@@ -1,4 +1,7 @@
-import { dbGet, dbRun, type Card, type CardRarity, type UserCurrency } from "./db";
+import { dbGet, dbRun, ensureUserCurrency, type Card, type CardRarity, type UserCurrency } from "./db";
+import { grantOrRefund } from "./cardOwnership";
+
+export { ensureUserCurrency };
 
 export type PackType = "free" | "basic" | "premium" | "legend";
 
@@ -37,15 +40,6 @@ async function pickCardOfRarity(rarity: CardRarity): Promise<Card> {
   throw new Error(`해당 등급의 카드가 없습니다: ${rarity}`);
 }
 
-export async function ensureUserCurrency(userId: number): Promise<UserCurrency> {
-  let wallet = await dbGet<UserCurrency>("SELECT * FROM user_currency WHERE user_id = ?", [userId]);
-  if (!wallet) {
-    await dbRun("INSERT INTO user_currency (user_id, balance) VALUES (?, 0)", [userId]);
-    wallet = await dbGet<UserCurrency>("SELECT * FROM user_currency WHERE user_id = ?", [userId]);
-  }
-  return wallet!;
-}
-
 export function nextFreePackAt(wallet: UserCurrency): number | null {
   if (!wallet.last_free_pack_at) return null;
   const last = new Date(wallet.last_free_pack_at.replace(" ", "T") + "Z").getTime();
@@ -54,7 +48,10 @@ export function nextFreePackAt(wallet: UserCurrency): number | null {
 
 export class GachaError extends Error {}
 
-export async function openPack(userId: number, packType: PackType): Promise<{ card: Card; rarity: CardRarity }> {
+export async function openPack(
+  userId: number,
+  packType: PackType
+): Promise<{ card: Card; rarity: CardRarity; duplicate: boolean; currencyAwarded: number }> {
   const pack = PACK_TYPES[packType];
   if (!pack) throw new GachaError("잘못된 팩 종류입니다.");
 
@@ -85,11 +82,11 @@ export async function openPack(userId: number, packType: PackType): Promise<{ ca
   // per-rarity reveal effects should match the card actually awarded.
   const rarity = card.rarity;
 
-  await dbRun("INSERT INTO user_cards (user_id, card_id, acquired_via) VALUES (?, ?, 'pack')", [userId, card.id]);
+  const { duplicate, currencyAwarded } = await grantOrRefund(userId, card, "pack");
   await dbRun(
     "INSERT INTO pack_openings (user_id, pack_type, cost, result_card_id, result_rarity) VALUES (?, ?, ?, ?, ?)",
     [userId, packType, packType === "free" ? 0 : pack.cost, card.id, rarity]
   );
 
-  return { card, rarity };
+  return { card, rarity, duplicate, currencyAwarded };
 }

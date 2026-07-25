@@ -73,7 +73,7 @@ export default function CollectionGrid() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {filteredCards.map((card) => (
             <div key={card.id} className="flex flex-col gap-2">
-              <CardComponent card={card} ownedCount={card.owned_count} />
+              <CardComponent card={card} />
             </div>
           ))}
         </div>

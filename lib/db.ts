@@ -159,6 +159,15 @@ export async function setUserFavoriteTeam(userId: number, teamSlug: string | nul
   await dbRun("UPDATE users SET favorite_team_slug = ? WHERE id = ?", [teamSlug, userId]);
 }
 
+export async function ensureUserCurrency(userId: number): Promise<UserCurrency> {
+  let wallet = await dbGet<UserCurrency>("SELECT * FROM user_currency WHERE user_id = ?", [userId]);
+  if (!wallet) {
+    await dbRun("INSERT INTO user_currency (user_id, balance) VALUES (?, 0)", [userId]);
+    wallet = await dbGet<UserCurrency>("SELECT * FROM user_currency WHERE user_id = ?", [userId]);
+  }
+  return wallet!;
+}
+
 export type ChatMessage = {
   id: number;
   username: string;

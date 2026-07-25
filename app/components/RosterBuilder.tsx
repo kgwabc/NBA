@@ -159,12 +159,7 @@ export default function RosterBuilder() {
               {collection
                 .filter((c) => c.position === pickerPosition)
                 .map((card) => (
-                  <CardComponent
-                    key={card.id}
-                    card={card}
-                    ownedCount={card.owned_count}
-                    onClick={() => selectCard(pickerPosition, card)}
-                  />
+                  <CardComponent key={card.id} card={card} onClick={() => selectCard(pickerPosition, card)} />
                 ))}
             </div>
             {collection.filter((c) => c.position === pickerPosition).length === 0 && (

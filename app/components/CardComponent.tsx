@@ -37,12 +37,11 @@ export type CardComponentProps = {
     Card,
     "name" | "team_slug" | "position" | "rarity" | "off_rating" | "def_rating" | "salary" | "image_url" | "flavor_text"
   >;
-  ownedCount?: number;
   selected?: boolean;
   onClick?: () => void;
 };
 
-export default function CardComponent({ card, ownedCount, selected, onClick }: CardComponentProps) {
+export default function CardComponent({ card, selected, onClick }: CardComponentProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const showPhoto = !!card.image_url && !imageFailed;
 
@@ -98,11 +97,6 @@ export default function CardComponent({ card, ownedCount, selected, onClick }: C
         <p className="line-clamp-2 px-3 pb-2.5 text-xs italic text-zinc-500 dark:text-zinc-400">{card.flavor_text}</p>
       )}
 
-      {typeof ownedCount === "number" && (
-        <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
-          × {ownedCount}
-        </span>
-      )}
     </button>
   );
 }

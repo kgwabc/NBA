@@ -16,7 +16,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await openPack(session.userId, packType);
-    return NextResponse.json({ card: result.card, rarity: result.rarity });
+    return NextResponse.json({
+      card: result.card,
+      rarity: result.rarity,
+      duplicate: result.duplicate,
+      currencyAwarded: result.currencyAwarded,
+    });
   } catch (err) {
     if (err instanceof GachaError) {
       return NextResponse.json({ error: err.message }, { status: 400 });

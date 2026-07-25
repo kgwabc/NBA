@@ -37,7 +37,12 @@ export default function PackOpener() {
   const [now, setNow] = useState(() => Date.now());
   const [opening, setOpening] = useState<PackType | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [pulledCard, setPulledCard] = useState<{ card: Card; rarity: CardRarity } | null>(null);
+  const [pulledCard, setPulledCard] = useState<{
+    card: Card;
+    rarity: CardRarity;
+    duplicate: boolean;
+    currencyAwarded: number;
+  } | null>(null);
   const [flipped, setFlipped] = useState(false);
 
   function loadStatus() {
@@ -68,7 +73,12 @@ export default function PackOpener() {
         setError(data.error ?? "팩을 열지 못했습니다.");
         return;
       }
-      setPulledCard({ card: data.card, rarity: data.rarity });
+      setPulledCard({
+        card: data.card,
+        rarity: data.rarity,
+        duplicate: data.duplicate,
+        currencyAwarded: data.currencyAwarded,
+      });
       loadStatus();
     } finally {
       setOpening(null);
@@ -143,6 +153,11 @@ export default function PackOpener() {
             </div>
           </div>
           {!flipped && <p className="text-sm text-zinc-500 dark:text-zinc-400">카드를 클릭해서 확인하세요</p>}
+          {flipped && pulledCard.duplicate && (
+            <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
+              이미 보유한 카드입니다! +{pulledCard.currencyAwarded} 재화 획득
+            </p>
+          )}
         </div>
       )}
     </div>
