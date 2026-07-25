@@ -6,8 +6,7 @@ import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 const NAV_LINKS = [
   { href: "/game", label: "홈" },
   { href: "/game/collection", label: "컬렉션" },
-  { href: "/game/deck", label: "덱 빌더" },
-  { href: "/game/battle", label: "배틀" },
+  { href: "/game/arcade", label: "아케이드" },
 ];
 
 export default async function GameLayout({ children }: { children: React.ReactNode }) {

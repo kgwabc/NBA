@@ -87,24 +87,6 @@ function ensureReady(): Promise<void> {
         );
       `);
       await db.execute(`
-        CREATE TABLE IF NOT EXISTS decks (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          user_id INTEGER NOT NULL REFERENCES users(id),
-          name TEXT NOT NULL DEFAULT '내 덱',
-          is_active INTEGER NOT NULL DEFAULT 0,
-          created_at TEXT NOT NULL DEFAULT (datetime('now')),
-          updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-        );
-      `);
-      await db.execute(`
-        CREATE TABLE IF NOT EXISTS deck_slots (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          deck_id INTEGER NOT NULL REFERENCES decks(id),
-          position TEXT NOT NULL,
-          user_card_id INTEGER NOT NULL REFERENCES user_cards(id)
-        );
-      `);
-      await db.execute(`
         CREATE TABLE IF NOT EXISTS pack_openings (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           user_id INTEGER NOT NULL REFERENCES users(id),
@@ -116,25 +98,22 @@ function ensureReady(): Promise<void> {
         );
       `);
       await db.execute(`
-        CREATE TABLE IF NOT EXISTS battle_history (
+        CREATE TABLE IF NOT EXISTS arcade_matches (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           user_id INTEGER NOT NULL REFERENCES users(id),
-          deck_id INTEGER NOT NULL REFERENCES decks(id),
-          opponent_bot TEXT NOT NULL,
-          user_score INTEGER NOT NULL,
-          opponent_score INTEGER NOT NULL,
+          mode TEXT NOT NULL,
+          home_card_ids TEXT NOT NULL,
+          away_card_ids TEXT NOT NULL,
+          home_score INTEGER NOT NULL,
+          away_score INTEGER NOT NULL,
           result TEXT NOT NULL,
-          reward_currency INTEGER NOT NULL DEFAULT 0,
-          events_json TEXT NOT NULL,
           created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
       `);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_user_cards_user ON user_cards(user_id);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_user_cards_card ON user_cards(card_id);`);
-      await db.execute(`CREATE INDEX IF NOT EXISTS idx_deck_slots_deck ON deck_slots(deck_id);`);
-      await db.execute(`CREATE INDEX IF NOT EXISTS idx_decks_user ON decks(user_id);`);
       await db.execute(`CREATE INDEX IF NOT EXISTS idx_pack_openings_user ON pack_openings(user_id, created_at);`);
-      await db.execute(`CREATE INDEX IF NOT EXISTS idx_battle_history_user ON battle_history(user_id, created_at);`);
+      await db.execute(`CREATE INDEX IF NOT EXISTS idx_arcade_matches_user ON arcade_matches(user_id, created_at);`);
       await ensureColumn("cards", "image_url", "image_url TEXT");
       await ensureColumn("users", "favorite_team_slug", "favorite_team_slug TEXT");
     })();
@@ -216,22 +195,6 @@ export type UserCurrency = {
   updated_at: string;
 };
 
-export type Deck = {
-  id: number;
-  user_id: number;
-  name: string;
-  is_active: number;
-  created_at: string;
-  updated_at: string;
-};
-
-export type DeckSlot = {
-  id: number;
-  deck_id: number;
-  position: CardPosition;
-  user_card_id: number;
-};
-
 export type PackOpening = {
   id: number;
   user_id: number;
@@ -242,15 +205,17 @@ export type PackOpening = {
   created_at: string;
 };
 
-export type BattleHistoryRow = {
+export type ArcadeMatchMode = "vs_ai" | "local_2p";
+export type ArcadeMatchResult = "win" | "loss" | "draw" | "p1_win" | "p2_win";
+
+export type ArcadeMatchRow = {
   id: number;
   user_id: number;
-  deck_id: number;
-  opponent_bot: string;
-  user_score: number;
-  opponent_score: number;
-  result: "win" | "loss" | "draw";
-  reward_currency: number;
-  events_json: string;
+  mode: ArcadeMatchMode;
+  home_card_ids: string;
+  away_card_ids: string;
+  home_score: number;
+  away_score: number;
+  result: ArcadeMatchResult;
   created_at: string;
 };
