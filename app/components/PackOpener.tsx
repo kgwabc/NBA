@@ -69,13 +69,17 @@ export default function PackOpener() {
         return;
       }
       setPulledCard({ card: data.card, rarity: data.rarity });
-      requestAnimationFrame(() => setFlipped(true));
-      if (data.rarity === "LEGEND") {
-        new Audio("/sounds/legend.mp3").play().catch(() => {});
-      }
       loadStatus();
     } finally {
       setOpening(null);
+    }
+  }
+
+  function handleReveal() {
+    if (!pulledCard || flipped) return;
+    setFlipped(true);
+    if (pulledCard.rarity === "LEGEND") {
+      new Audio("/sounds/legend.mp3").play().catch(() => {});
     }
   }
 
@@ -119,13 +123,26 @@ export default function PackOpener() {
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       {pulledCard && (
-        <div className="card-flip-container h-[26rem] w-64">
-          <div className={`card-flip-inner ${flipped ? "is-flipped" : ""}`}>
-            <div className="card-face flex items-center justify-center rounded-2xl bg-zinc-800 text-5xl">🎴</div>
-            <div className={`card-face card-face-back ${flipped ? SHAKE_CLASS[pulledCard.rarity] ?? "" : ""}`}>
-              <CardComponent card={pulledCard.card} />
+        <div className="flex flex-col items-center gap-2">
+          <div
+            className={`card-flip-container h-[26rem] w-64 ${!flipped ? "cursor-pointer" : ""}`}
+            onClick={handleReveal}
+            role={!flipped ? "button" : undefined}
+            tabIndex={!flipped ? 0 : undefined}
+            onKeyDown={(e) => {
+              if (!flipped && (e.key === "Enter" || e.key === " ")) handleReveal();
+            }}
+          >
+            <div className={`card-flip-inner ${flipped ? "is-flipped" : ""}`}>
+              <div className="card-face flex items-center justify-center rounded-2xl bg-zinc-800 text-5xl transition-transform hover:scale-105">
+                🎴
+              </div>
+              <div className={`card-face card-face-back ${flipped ? SHAKE_CLASS[pulledCard.rarity] ?? "" : ""}`}>
+                <CardComponent card={pulledCard.card} />
+              </div>
             </div>
           </div>
+          {!flipped && <p className="text-sm text-zinc-500 dark:text-zinc-400">카드를 클릭해서 확인하세요</p>}
         </div>
       )}
     </div>

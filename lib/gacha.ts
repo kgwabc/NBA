@@ -9,7 +9,11 @@ export const PACK_TYPES: Record<PackType, { cost: number; dropRates: Record<Card
   legend: { cost: 800, dropRates: { BRONZE: 0.05, SILVER: 0.25, GOLD: 0.5, LEGEND: 0.2 } },
 };
 
-const FREE_PACK_COOLDOWN_MS = 10 * 1000;
+const FREE_PACK_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+// Ascending so an empty tier (e.g. BRONZE temporarily has zero cards) falls back to the
+// next tier up rather than erroring — resolves itself automatically once cards exist again.
+const RARITY_FALLBACK_ORDER: CardRarity[] = ["BRONZE", "SILVER", "GOLD", "LEGEND"];
 
 function rollRarity(dropRates: Record<CardRarity, number>): CardRarity {
   const roll = Math.random();
@@ -23,9 +27,14 @@ function rollRarity(dropRates: Record<CardRarity, number>): CardRarity {
 }
 
 async function pickCardOfRarity(rarity: CardRarity): Promise<Card> {
-  const card = await dbGet<Card>("SELECT * FROM cards WHERE rarity = ? ORDER BY RANDOM() LIMIT 1", [rarity]);
-  if (!card) throw new Error(`해당 등급의 카드가 없습니다: ${rarity}`);
-  return card;
+  const startIndex = RARITY_FALLBACK_ORDER.indexOf(rarity);
+  for (let i = startIndex; i < RARITY_FALLBACK_ORDER.length; i++) {
+    const card = await dbGet<Card>("SELECT * FROM cards WHERE rarity = ? ORDER BY RANDOM() LIMIT 1", [
+      RARITY_FALLBACK_ORDER[i],
+    ]);
+    if (card) return card;
+  }
+  throw new Error(`해당 등급의 카드가 없습니다: ${rarity}`);
 }
 
 export async function ensureUserCurrency(userId: number): Promise<UserCurrency> {
@@ -69,8 +78,12 @@ export async function openPack(userId: number, packType: PackType): Promise<{ ca
     ]);
   }
 
-  const rarity = rollRarity(pack.dropRates);
-  const card = await pickCardOfRarity(rarity);
+  const rolledRarity = rollRarity(pack.dropRates);
+  const card = await pickCardOfRarity(rolledRarity);
+  // Report the card's real rarity, not the rolled tier — they can differ when the rolled
+  // tier had zero cards and pickCardOfRarity fell back to the next one up, and the UI's
+  // per-rarity reveal effects should match the card actually awarded.
+  const rarity = card.rarity;
 
   await dbRun("INSERT INTO user_cards (user_id, card_id, acquired_via) VALUES (?, ?, 'pack')", [userId, card.id]);
   await dbRun(
