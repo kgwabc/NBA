@@ -131,53 +131,55 @@ export default function PackOpener() {
   const freeAvailable = !status?.nextFreePackAt || freeCooldownRemaining <= 0;
 
   return (
-    <div className="flex w-full max-w-2xl flex-col items-center gap-6">
+    <div className="flex w-full max-w-2xl flex-col items-center gap-3 sm:gap-6">
       {status && (
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
           보유 재화: <span className="font-semibold text-black dark:text-zinc-50">{status.balance}</span>
         </p>
       )}
 
-      <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
-        {(Object.keys(PACK_LABELS) as PackType[]).map((packType) => {
-          const cost = status?.packTypes[packType]?.cost ?? 0;
-          const dropRates = status?.packTypes[packType]?.dropRates;
-          const disabled =
-            opening !== null || (packType === "free" && !freeAvailable) || (status ? status.balance < cost : false);
-          return (
-            <button
-              key={packType}
-              type="button"
-              disabled={disabled}
-              onClick={() => handleOpen(packType)}
-              className={`flex flex-col items-center gap-1 rounded-lg border border-black/[.08] bg-white p-4 text-sm font-medium text-black transition-colors hover:border-black/40 disabled:opacity-40 dark:border-white/[.145] dark:bg-zinc-900 dark:text-zinc-50 ${
-                PACK_TILE_CLASS[packType] ?? ""
-              }`}
-            >
-              <span>{PACK_LABELS[packType]}</span>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                {packType === "free"
-                  ? freeAvailable
-                    ? "지금 열기 가능"
-                    : formatCountdown(freeCooldownRemaining)
-                  : `${cost} 재화`}
-              </span>
-              {dropRates && (
-                <span className="text-center text-[10px] leading-tight text-zinc-400 dark:text-zinc-500">
-                  {formatDropRates(dropRates)}
+      {!pulledCard && (
+        <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
+          {(Object.keys(PACK_LABELS) as PackType[]).map((packType) => {
+            const cost = status?.packTypes[packType]?.cost ?? 0;
+            const dropRates = status?.packTypes[packType]?.dropRates;
+            const disabled =
+              opening !== null || (packType === "free" && !freeAvailable) || (status ? status.balance < cost : false);
+            return (
+              <button
+                key={packType}
+                type="button"
+                disabled={disabled}
+                onClick={() => handleOpen(packType)}
+                className={`flex flex-col items-center gap-1 rounded-lg border border-black/[.08] bg-white p-4 text-sm font-medium text-black transition-colors hover:border-black/40 disabled:opacity-40 dark:border-white/[.145] dark:bg-zinc-900 dark:text-zinc-50 ${
+                  PACK_TILE_CLASS[packType] ?? ""
+                }`}
+              >
+                <span>{PACK_LABELS[packType]}</span>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {packType === "free"
+                    ? freeAvailable
+                      ? "지금 열기 가능"
+                      : formatCountdown(freeCooldownRemaining)
+                    : `${cost} 재화`}
                 </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+                {dropRates && (
+                  <span className="text-center text-[10px] leading-tight text-zinc-400 dark:text-zinc-500">
+                    {formatDropRates(dropRates)}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       {pulledCard && (
         <div className="flex flex-col items-center gap-2">
           <div
-            className={`card-flip-container h-[24rem] w-56 sm:h-[26rem] sm:w-64 ${!flipped ? "cursor-pointer" : ""}`}
+            className={`card-flip-container h-[21rem] w-52 sm:h-[26rem] sm:w-64 ${!flipped ? "cursor-pointer" : ""}`}
             onClick={handleReveal}
             role={!flipped ? "button" : undefined}
             tabIndex={!flipped ? 0 : undefined}
@@ -203,6 +205,15 @@ export default function PackOpener() {
             <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
               이미 보유한 카드입니다! +{pulledCard.currencyAwarded} 재화 획득
             </p>
+          )}
+          {flipped && (
+            <button
+              type="button"
+              onClick={() => setPulledCard(null)}
+              className="mt-1 rounded-full border border-black/[.08] px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:border-black/40 dark:border-white/[.145] dark:text-zinc-400"
+            >
+              다른 팩 열기
+            </button>
           )}
         </div>
       )}

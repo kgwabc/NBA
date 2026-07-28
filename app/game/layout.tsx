@@ -46,7 +46,7 @@ export default async function GameLayout({ children }: { children: React.ReactNo
           ))}
         </nav>
       </header>
-      <main className="flex flex-1 flex-col items-center gap-8 px-4 py-4 sm:py-8">{children}</main>
+      <main className="flex flex-1 flex-col items-center gap-4 px-4 py-4 sm:gap-8 sm:py-8">{children}</main>
     </div>
   );
 }

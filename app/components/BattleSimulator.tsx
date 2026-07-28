@@ -94,7 +94,7 @@ function LineupGrid({
   return (
     <div className="flex flex-col gap-2">
       <h3 className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{title}</h3>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
         {sortByPosition(cards).map((card) => {
           const isScoring = lastScore?.team === team && lastScore.name === card.name;
           // Re-keying on the score's seq (instead of just the card name) forces this
@@ -235,15 +235,15 @@ export default function BattleSimulator() {
   }
 
   return (
-    <div className="flex w-full max-w-4xl flex-col gap-6">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+    <div className="flex w-full max-w-4xl flex-col gap-3 sm:gap-6">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
         {(Object.keys(BOT_LABELS) as BotDeckId[]).map((bot) => (
           <button
             key={bot}
             type="button"
             disabled={running}
             onClick={() => handleStart(bot)}
-            className="rounded-lg border border-black/[.08] bg-white p-4 text-sm font-medium text-black transition-colors hover:border-black/40 disabled:opacity-40 dark:border-white/[.145] dark:bg-zinc-900 dark:text-zinc-50"
+            className="rounded-lg border border-black/[.08] bg-white p-3 text-sm font-medium text-black transition-colors hover:border-black/40 disabled:opacity-40 dark:border-white/[.145] dark:bg-zinc-900 dark:text-zinc-50 sm:p-4"
           >
             {BOT_LABELS[bot]}
           </button>
@@ -268,7 +268,7 @@ export default function BattleSimulator() {
 
       {(running || visibleEvents.length > 0) && (
         <div className="flex flex-col gap-3">
-          <div className="flex max-h-64 flex-col-reverse gap-1 overflow-y-auto rounded-lg border border-black/[.08] p-3 dark:border-white/[.145]">
+          <div className="flex max-h-40 flex-col-reverse gap-1 overflow-y-auto rounded-lg border border-black/[.08] p-3 dark:border-white/[.145] sm:max-h-64">
             {[...visibleEvents].reverse().map((event, idx) => (
               <p key={idx} className="battle-event-line text-xs text-zinc-600 dark:text-zinc-400">
                 <span className="font-semibold text-zinc-400">{event.time}</span>{" "}

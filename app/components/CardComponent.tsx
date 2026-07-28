@@ -100,7 +100,7 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
           </span>
         )}
 
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-2 pt-8">
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-2 pt-6 sm:pt-8">
           <p className="truncate text-base font-bold text-white drop-shadow-md">{card.name}</p>
           <p className="truncate text-xs font-medium text-white/80">
             {RARITY_LABELS[card.rarity]} · {card.team_slug.toUpperCase()}
@@ -108,14 +108,16 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-1 px-3 py-2.5 text-[11px] text-zinc-600 dark:text-zinc-400 sm:gap-2 sm:text-sm">
+      <div className="flex items-center justify-between gap-1 px-3 py-1.5 text-[11px] text-zinc-600 dark:text-zinc-400 sm:gap-2 sm:py-2.5 sm:text-sm">
         <span>OFF {card.off_rating}</span>
         <span>DEF {card.def_rating}</span>
         <span>${card.salary}M</span>
       </div>
 
       {card.flavor_text && !hideFlavorText && (
-        <p className="line-clamp-2 px-3 pb-2.5 text-xs italic text-zinc-500 dark:text-zinc-400">{card.flavor_text}</p>
+        <p className="hidden line-clamp-2 px-3 pb-2.5 text-xs italic text-zinc-500 dark:text-zinc-400 sm:block">
+          {card.flavor_text}
+        </p>
       )}
 
     </button>

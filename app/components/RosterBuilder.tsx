@@ -86,9 +86,9 @@ export default function RosterBuilder() {
   const gaugePercent = Math.min(100, (validation.totalSalary / ROSTER_SALARY_CAP) * 100);
 
   return (
-    <div className="flex w-full max-w-5xl flex-col gap-6">
-      <section className="flex flex-col gap-4">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="flex w-full max-w-5xl flex-col gap-3 sm:gap-6">
+      <section className="flex flex-col gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
           {REQUIRED_POSITIONS.map((pos) => {
             const slot = slots[pos];
             return (
@@ -160,7 +160,7 @@ export default function RosterBuilder() {
                 닫기
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4">
               {collection
                 .filter((c) => c.position === pickerPosition)
                 .map((card) => (

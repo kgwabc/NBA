@@ -51,14 +51,14 @@ export default function CollectionGrid() {
   }
 
   return (
-    <div className="flex w-full max-w-6xl flex-col gap-6">
-      <div className="flex flex-wrap gap-2">
+    <div className="flex w-full max-w-6xl flex-col gap-3 sm:gap-6">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {RARITY_FILTERS.map((option) => (
           <button
             key={option}
             type="button"
             onClick={() => setRarity(option)}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm ${
               rarity === option
                 ? "bg-foreground text-background"
                 : "border border-black/[.08] text-zinc-600 hover:border-black/40 dark:border-white/[.145] dark:text-zinc-400"
@@ -72,7 +72,7 @@ export default function CollectionGrid() {
       {filteredCards.length === 0 ? (
         <p className="text-center text-zinc-500 dark:text-zinc-400">보유한 카드가 없습니다. 팩을 열어보세요!</p>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
           {filteredCards.map((card) => (
             <div key={card.id} className="flex flex-col gap-2">
               <CardComponent card={card} enhancementLevel={card.enhancement_level} onClick={() => setEnhancing(card)} />
