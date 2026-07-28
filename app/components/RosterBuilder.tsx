@@ -148,8 +148,8 @@ export default function RosterBuilder() {
       </section>
 
       {pickerPosition && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="flex max-h-[80vh] w-full max-w-3xl flex-col gap-4 overflow-y-auto rounded-lg bg-white p-4 dark:bg-zinc-900">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 px-4 sm:items-center">
+          <div className="flex max-h-[85dvh] w-full max-w-3xl flex-col gap-4 overflow-y-auto rounded-t-lg bg-white p-4 dark:bg-zinc-900 sm:rounded-lg">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-black dark:text-zinc-50">{pickerPosition} 카드 선택</h3>
               <button

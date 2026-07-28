@@ -177,7 +177,7 @@ export default function PackOpener() {
       {pulledCard && (
         <div className="flex flex-col items-center gap-2">
           <div
-            className={`card-flip-container h-[26rem] w-64 ${!flipped ? "cursor-pointer" : ""}`}
+            className={`card-flip-container h-[24rem] w-56 sm:h-[26rem] sm:w-64 ${!flipped ? "cursor-pointer" : ""}`}
             onClick={handleReveal}
             role={!flipped ? "button" : undefined}
             tabIndex={!flipped ? 0 : undefined}

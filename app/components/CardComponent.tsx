@@ -55,7 +55,7 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
       disabled={!onClick}
       className={`group relative flex w-full flex-col overflow-hidden rounded-2xl bg-white text-left transition-transform duration-300 dark:bg-zinc-900 ${
         RARITY_CLASS[card.rarity]
-      } ${onClick ? "cursor-pointer hover:-translate-y-1.5 hover:scale-[1.03]" : ""} ${
+      } ${onClick ? "cursor-pointer hover:-translate-y-1.5 hover:scale-[1.03] active:-translate-y-0.5 active:scale-[0.97]" : ""} ${
         selected ? "ring-4 ring-orange-500 ring-offset-2 dark:ring-offset-black" : ""
       }`}
     >
@@ -101,14 +101,14 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
         )}
 
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-2 pt-8">
-          <p className="text-base font-bold text-white drop-shadow-md">{card.name}</p>
-          <p className="text-xs font-medium text-white/80">
+          <p className="truncate text-base font-bold text-white drop-shadow-md">{card.name}</p>
+          <p className="truncate text-xs font-medium text-white/80">
             {RARITY_LABELS[card.rarity]} · {card.team_slug.toUpperCase()}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2 px-3 py-2.5 text-sm text-zinc-600 dark:text-zinc-400">
+      <div className="flex items-center justify-between gap-1 px-3 py-2.5 text-[11px] text-zinc-600 dark:text-zinc-400 sm:gap-2 sm:text-sm">
         <span>OFF {card.off_rating}</span>
         <span>DEF {card.def_rating}</span>
         <span>${card.salary}M</span>

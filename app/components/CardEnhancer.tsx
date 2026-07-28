@@ -68,9 +68,12 @@ export default function CardEnhancer({ card, onClose, onEnhanced }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center"
+      onClick={onClose}
+    >
       <div
-        className="flex w-full max-w-md flex-col gap-4 rounded-2xl bg-white p-5 dark:bg-zinc-900"
+        className="flex max-h-[85dvh] w-full max-w-md flex-col gap-4 overflow-y-auto rounded-t-2xl bg-white p-5 dark:bg-zinc-900 sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -154,12 +157,12 @@ export default function CardEnhancer({ card, onClose, onEnhanced }: Props) {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-black/[.08] text-zinc-500 dark:border-white/[.145] dark:text-zinc-400">
-                    <th className="px-2 py-1.5 text-left font-medium">레벨</th>
-                    <th className="px-2 py-1.5 text-right font-medium">비용</th>
-                    <th className="px-2 py-1.5 text-right font-medium">성공</th>
-                    <th className="px-2 py-1.5 text-right font-medium">유지</th>
-                    <th className="px-2 py-1.5 text-right font-medium">하락</th>
-                    <th className="px-2 py-1.5 text-right font-medium">파괴</th>
+                    <th className="px-1.5 py-1.5 text-left font-medium sm:px-2">레벨</th>
+                    <th className="px-1.5 py-1.5 text-right font-medium sm:px-2">비용</th>
+                    <th className="px-1.5 py-1.5 text-right font-medium sm:px-2">성공</th>
+                    <th className="px-1.5 py-1.5 text-right font-medium sm:px-2">유지</th>
+                    <th className="px-1.5 py-1.5 text-right font-medium sm:px-2">하락</th>
+                    <th className="px-1.5 py-1.5 text-right font-medium sm:px-2">파괴</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -172,22 +175,22 @@ export default function CardEnhancer({ card, onClose, onEnhanced }: Props) {
                           lvl === level ? "bg-amber-500/10 font-semibold" : ""
                         }`}
                       >
-                        <td className="px-2 py-1 text-left text-zinc-700 dark:text-zinc-300">
+                        <td className="px-1.5 py-1 text-left text-zinc-700 dark:text-zinc-300 sm:px-2">
                           +{lvl} → +{lvl + 1}
                         </td>
-                        <td className="px-2 py-1 text-right text-zinc-700 dark:text-zinc-300">
+                        <td className="px-1.5 py-1 text-right text-zinc-700 dark:text-zinc-300 sm:px-2">
                           {enhancementCost(card.rarity, lvl)}
                         </td>
-                        <td className="px-2 py-1 text-right text-zinc-700 dark:text-zinc-300">
+                        <td className="px-1.5 py-1 text-right text-zinc-700 dark:text-zinc-300 sm:px-2">
                           {Math.round(p.success * 100)}%
                         </td>
-                        <td className="px-2 py-1 text-right text-zinc-700 dark:text-zinc-300">
+                        <td className="px-1.5 py-1 text-right text-zinc-700 dark:text-zinc-300 sm:px-2">
                           {Math.round(p.stay * 100)}%
                         </td>
-                        <td className="px-2 py-1 text-right text-zinc-700 dark:text-zinc-300">
+                        <td className="px-1.5 py-1 text-right text-zinc-700 dark:text-zinc-300 sm:px-2">
                           {Math.round(p.downgrade * 100)}%
                         </td>
-                        <td className="px-2 py-1 text-right text-zinc-700 dark:text-zinc-300">
+                        <td className="px-1.5 py-1 text-right text-zinc-700 dark:text-zinc-300 sm:px-2">
                           {Math.round(p.destroy * 100)}%
                         </td>
                       </tr>

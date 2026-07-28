@@ -236,7 +236,7 @@ export default function BattleSimulator() {
 
   return (
     <div className="flex w-full max-w-4xl flex-col gap-6">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {(Object.keys(BOT_LABELS) as BotDeckId[]).map((bot) => (
           <button
             key={bot}
@@ -253,7 +253,7 @@ export default function BattleSimulator() {
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       {(running || visibleEvents.length > 0) && (
-        <div className="flex items-center justify-center gap-8 text-4xl font-black text-black sm:text-5xl dark:text-zinc-50">
+        <div className="flex items-center justify-center gap-4 text-4xl font-black text-black sm:gap-8 sm:text-5xl dark:text-zinc-50">
           <span>{liveUserScore}</span>
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-base font-normal text-zinc-400 sm:text-lg">VS</span>
