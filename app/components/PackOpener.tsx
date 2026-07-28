@@ -191,7 +191,7 @@ export default function PackOpener() {
               <div
                 className={`card-face relative flex items-center justify-center overflow-hidden rounded-2xl transition-transform hover:scale-105 ${PACK_FACE_CLASS[pulledCard.packType]}`}
               >
-                <Image src="/game/pack-back.png" alt="카드팩 뒷면" fill className="object-cover" />
+                <Image src="/game/pack-back.jpg" alt="카드팩 뒷면" fill className="object-cover" />
               </div>
               <div className={`card-face card-face-back ${flipped ? SHAKE_CLASS[pulledCard.rarity] ?? "" : ""}`}>
                 <CardComponent card={pulledCard.card} />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { Card } from "@/lib/db";
 
 const RARITY_LABELS: Record<Card["rarity"], string> = {
@@ -52,7 +53,7 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className={`group relative flex w-full flex-col overflow-hidden rounded-2xl bg-white text-left transition-all duration-300 dark:bg-zinc-900 ${
+      className={`group relative flex w-full flex-col overflow-hidden rounded-2xl bg-white text-left transition-[transform,box-shadow,filter] duration-300 dark:bg-zinc-900 ${
         RARITY_CLASS[card.rarity]
       } ${onClick ? "cursor-pointer hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-2xl hover:brightness-110" : ""} ${
         selected ? "ring-4 ring-orange-500 ring-offset-2 dark:ring-offset-black" : ""
@@ -60,15 +61,27 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
     >
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-zinc-200 dark:bg-zinc-800">
         {showPhoto ? (
-          // eslint-disable-next-line @next/next/no-img-element -- external Wikimedia photo, not a local/optimizable asset
-          <img
-            src={card.image_url!}
-            alt={card.name}
-            loading="lazy"
-            onError={() => setImageFailed(true)}
-            style={{ objectPosition: IMAGE_POSITION_OVERRIDES[card.name] ?? "top" }}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+          card.image_url!.startsWith("/") ? (
+            <Image
+              src={card.image_url!}
+              alt={card.name}
+              fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+              onError={() => setImageFailed(true)}
+              style={{ objectPosition: IMAGE_POSITION_OVERRIDES[card.name] ?? "top" }}
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- external Wikimedia photo, not in next/image remotePatterns; local /public assets use next/image above instead
+            <img
+              src={card.image_url!}
+              alt={card.name}
+              loading="lazy"
+              onError={() => setImageFailed(true)}
+              style={{ objectPosition: IMAGE_POSITION_OVERRIDES[card.name] ?? "top" }}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          )
         ) : (
           <div
             className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${PLACEHOLDER_GRADIENT[card.rarity]}`}
@@ -77,12 +90,12 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
           </div>
         )}
 
-        <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+        <span className="absolute right-2 top-2 rounded-full bg-black/75 px-2.5 py-1 text-xs font-bold text-white">
           {card.position}
         </span>
 
         {!!enhancementLevel && enhancementLevel > 0 && (
-          <span className="absolute left-2 top-2 rounded-full bg-amber-500/90 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+          <span className="absolute left-2 top-2 rounded-full bg-amber-500/90 px-2.5 py-1 text-xs font-bold text-white">
             +{enhancementLevel}
           </span>
         )}

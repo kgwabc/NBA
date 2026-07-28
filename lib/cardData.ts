@@ -23,7 +23,7 @@ export const cardSeeds: CardSeed[] = [
     def: 90,
     salary: 45,
     flavorText: "역대급 3점슛 능력으로 '스몰볼' 시대를 연 워리어스의 에이스.",
-    imageUrl: "/players/stephen-curry.png",
+    imageUrl: "/players/stephen-curry.jpg",
   },
   {
     name: "마이클 조던",
@@ -34,7 +34,7 @@ export const cardSeeds: CardSeed[] = [
     def: 95,
     salary: 45,
     flavorText: "농구 역사상 최고의 선수로 꼽히는 불스의 전설.",
-    imageUrl: "/players/michael-jordan.png",
+    imageUrl: "/players/michael-jordan.jpg",
   },
   {
     name: "르브론 제임스",
