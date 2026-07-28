@@ -53,9 +53,9 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className={`group relative flex w-full flex-col overflow-hidden rounded-2xl bg-white text-left transition-[transform,box-shadow,filter] duration-300 dark:bg-zinc-900 ${
+      className={`group relative flex w-full flex-col overflow-hidden rounded-2xl bg-white text-left transition-transform duration-300 dark:bg-zinc-900 ${
         RARITY_CLASS[card.rarity]
-      } ${onClick ? "cursor-pointer hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-2xl hover:brightness-110" : ""} ${
+      } ${onClick ? "cursor-pointer hover:-translate-y-1.5 hover:scale-[1.03]" : ""} ${
         selected ? "ring-4 ring-orange-500 ring-offset-2 dark:ring-offset-black" : ""
       }`}
     >
