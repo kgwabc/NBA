@@ -88,7 +88,7 @@ export default function RosterBuilder() {
   return (
     <div className="flex w-full max-w-5xl flex-col gap-3 sm:gap-6">
       <section className="flex flex-col gap-3 sm:gap-4">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+        <div className="grid grid-cols-5 gap-1 sm:gap-3 lg:gap-4">
           {REQUIRED_POSITIONS.map((pos) => {
             const slot = slots[pos];
             return (

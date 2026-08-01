@@ -94,7 +94,7 @@ function LineupGrid({
   return (
     <div className="flex flex-col gap-2">
       <h3 className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{title}</h3>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
+      <div className="grid grid-cols-5 gap-1 sm:gap-3 lg:gap-4">
         {sortByPosition(cards).map((card) => {
           const isScoring = lastScore?.team === team && lastScore.name === card.name;
           // Re-keying on the score's seq (instead of just the card name) forces this
