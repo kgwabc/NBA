@@ -42,9 +42,17 @@ export type CardComponentProps = {
   onClick?: () => void;
   hideFlavorText?: boolean;
   enhancementLevel?: number;
+  hideNameOnMobile?: boolean;
 };
 
-export default function CardComponent({ card, selected, onClick, hideFlavorText, enhancementLevel }: CardComponentProps) {
+export default function CardComponent({
+  card,
+  selected,
+  onClick,
+  hideFlavorText,
+  enhancementLevel,
+  hideNameOnMobile,
+}: CardComponentProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const showPhoto = !!card.image_url && !imageFailed;
 
@@ -101,7 +109,13 @@ export default function CardComponent({ card, selected, onClick, hideFlavorText,
         )}
 
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-2 pt-6 sm:pt-8">
-          <p className="truncate text-base font-bold text-white drop-shadow-md">{card.name}</p>
+          <p
+            className={`truncate text-base font-bold text-white drop-shadow-md ${
+              hideNameOnMobile ? "hidden sm:block" : ""
+            }`}
+          >
+            {card.name}
+          </p>
           <p className="truncate text-xs font-medium text-white/80">
             {RARITY_LABELS[card.rarity]} · {card.team_slug.toUpperCase()}
           </p>

@@ -100,6 +100,7 @@ export default function RosterBuilder() {
                     onClick={() => setPickerPosition(pos)}
                     selected
                     enhancementLevel={slot.card.enhancement_level}
+                    hideNameOnMobile
                   />
                 ) : (
                   <button
