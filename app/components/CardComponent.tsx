@@ -63,33 +63,25 @@ export default function CardComponent({
       disabled={!onClick}
       className={`group relative flex w-full flex-col overflow-hidden rounded-2xl bg-white text-left transition-transform duration-300 dark:bg-zinc-900 ${
         RARITY_CLASS[card.rarity]
-      } ${onClick ? "cursor-pointer hover:-translate-y-1.5 hover:scale-[1.03] active:-translate-y-0.5 active:scale-[0.97]" : ""} ${
+      } ${
+        onClick
+          ? "cursor-pointer active:scale-[0.97] [@media(hover:hover)]:hover:-translate-y-1.5 [@media(hover:hover)]:hover:scale-[1.03] [@media(hover:hover)]:active:-translate-y-0.5"
+          : ""
+      } ${
         selected ? "ring-4 ring-orange-500 ring-offset-2 dark:ring-offset-black" : ""
       }`}
     >
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-zinc-200 dark:bg-zinc-800">
         {showPhoto ? (
-          card.image_url!.startsWith("/") ? (
-            <Image
-              src={card.image_url!}
-              alt={card.name}
-              fill
-              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-              onError={() => setImageFailed(true)}
-              style={{ objectPosition: IMAGE_POSITION_OVERRIDES[card.name] ?? "top" }}
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element -- external Wikimedia photo, not in next/image remotePatterns; local /public assets use next/image above instead
-            <img
-              src={card.image_url!}
-              alt={card.name}
-              loading="lazy"
-              onError={() => setImageFailed(true)}
-              style={{ objectPosition: IMAGE_POSITION_OVERRIDES[card.name] ?? "top" }}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-          )
+          <Image
+            src={card.image_url!}
+            alt={card.name}
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+            onError={() => setImageFailed(true)}
+            style={{ objectPosition: IMAGE_POSITION_OVERRIDES[card.name] ?? "top" }}
+            className="object-cover transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-110"
+          />
         ) : (
           <div
             className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${PLACEHOLDER_GRADIENT[card.rarity]}`}
